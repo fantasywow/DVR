@@ -1,3 +1,5 @@
+#pragma once
+
 #define BM_CAPTURE_PICTURE WM_USER+1
 #define BM_PREVIEW_DBLCLK  WM_USER+2
 #define BM_PREVIEW_FOCUS   WM_USER+3

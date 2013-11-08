@@ -20,8 +20,6 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 		ATLTRACE(_T("Main dialog creation failed!\n"));
 		return 0;
 	}
-	dlgMain.SetWindowPos(NULL,0,0,1000,700,SWP_SHOWWINDOW);
-	dlgMain.CenterWindow();
 
 	int nRet = theLoop.Run();
 

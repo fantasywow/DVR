@@ -22,6 +22,7 @@ BOOL CMainDlg::OnIdle()
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	// center the dialog on the screen
+	SetWindowPos(NULL,0,0,1000,700,SWP_HIDEWINDOW);
 	CenterWindow();
 
 	m_isFullScreen = FALSE;
@@ -44,7 +45,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	}
   	if (iBoardNum <= 0)
   	{
-  		MessageBox(L"can not init DSPs\n");
+  		MessageBox(L"大华卡初始化失败!\n");
 		for (int i=0;i<8;i++)
 		{
 			m_channelHandle[i] = INVALID_HANDLE_VALUE;
@@ -69,7 +70,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	GetLocalTime(&st);
 	time.Format(L"%d.%d.%d   %d:%02d:%02d",st.wYear,st.wMonth,st.wDay,st.wHour,st.wMinute,st.wSecond);
 	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
-
 	//滑动条
 	m_hueSlide.Attach(GetDlgItem(IDC_HUE_SLIDER));
 	m_hueSlide.SetWindowPos(NULL,730,150,200,50,SWP_SHOWWINDOW);
@@ -87,9 +87,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	FocusChannel(0);
 	//默认布局
 	SetPreviewDlgLayout(PREVIEWLAYOUT4,0);
-	m_lastLayout = PREVIEWLAYOUT4;
 	//计时器
 	SetTimer(1,1000);
+
+	ShowWindow(SW_SHOW);
 
 	UIAddChildWindowContainer(m_hWnd);
 	return TRUE;
@@ -161,7 +162,8 @@ void CMainDlg::SetPreviewDlgLayout(PreviewLayout layout,int channelID)
 		for(int i =0 ;i<8;i++){
 			m_previewDlg[i].ShowWindow(SW_HIDE);
 		}
-		m_previewDlg[channelID].SetWindowPos(NULL,0,0,704,576,SWP_SHOWWINDOW);
+		m_previewDlg[0].SetWindowPos(NULL,0,0,704,576,SWP_SHOWWINDOW);
+		m_lastLayout = layout;
 	}
 	if (layout == PREVIEWLAYOUT4)
 	{
@@ -172,6 +174,7 @@ void CMainDlg::SetPreviewDlgLayout(PreviewLayout layout,int channelID)
 		for (int i=4;i<8;i++){
 			m_previewDlg[i].ShowWindow(SW_HIDE);
 		}
+		m_lastLayout = layout;
 	}
 	if (layout == PREVIEWLAYOUT8)
 	{
@@ -183,8 +186,15 @@ void CMainDlg::SetPreviewDlgLayout(PreviewLayout layout,int channelID)
 		m_previewDlg[5].SetWindowPos(NULL,176,432,176,144,SWP_SHOWWINDOW);
 		m_previewDlg[6].SetWindowPos(NULL,352,432,176,144,SWP_SHOWWINDOW);
 		m_previewDlg[7].SetWindowPos(NULL,528,432,176,144,SWP_SHOWWINDOW);
-
+		m_lastLayout = layout;
 	}	
+	if (layout == PREVIEWLAYOUTFULL)
+	{
+		for(int i =0 ;i<8;i++){
+			m_previewDlg[i].ShowWindow(SW_HIDE);
+		}
+		m_previewDlg[channelID].SetWindowPos(NULL,0,0,704,576,SWP_SHOWWINDOW);
+	}
 
 }
 
@@ -192,7 +202,6 @@ LRESULT CMainDlg::OnBnClickedLayoutbutton1(WORD /*wNotifyCode*/, WORD /*wID*/, H
 {
 	// TODO: 在此添加控件通知处理程序代码
 	SetPreviewDlgLayout(PREVIEWLAYOUT1,0);
-	m_lastLayout = PREVIEWLAYOUT1;
 	return 0; 
 }
 
@@ -200,7 +209,6 @@ LRESULT CMainDlg::OnBnClickedLayoutbutton4(WORD /*wNotifyCode*/, WORD /*wID*/, H
 {
 	// TODO: 在此添加控件通知处理程序代码
 	SetPreviewDlgLayout(PREVIEWLAYOUT4,0);
-	m_lastLayout = PREVIEWLAYOUT4;
 	return 0;
 }
 
@@ -208,7 +216,6 @@ LRESULT CMainDlg::OnBnClickedLayoutbutton8(WORD /*wNotifyCode*/, WORD /*wID*/, H
 {
 	// TODO: 在此添加控件通知处理程序代码
 	SetPreviewDlgLayout(PREVIEWLAYOUT8,0);
-	m_lastLayout = PREVIEWLAYOUT8;
 	return 0;
 }
 
@@ -219,10 +226,9 @@ LRESULT CMainDlg::OnPreviewDBLCLK(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 		SetPreviewDlgLayout(m_lastLayout,0);
 		m_isFullScreen = FALSE;
 	}else{
-		SetPreviewDlgLayout(PREVIEWLAYOUT1,(int)lParam);
+		SetPreviewDlgLayout(PREVIEWLAYOUTFULL,(int)lParam);
 		m_isFullScreen = TRUE;
 	}
-	
 	return 0;
 }
 
@@ -230,7 +236,11 @@ LRESULT CMainDlg::OnPreviewDBLCLK(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 LRESULT CMainDlg::OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_settingDlg.DoModal();
+	if (IDOK == m_settingDlg.DoModal())
+	{
+		this->m_setting = m_settingDlg.m_setting;
+	}
+	
 	return 0;
 }
 
@@ -275,7 +285,6 @@ void CMainDlg::FocusChannel( int channelID )
 	m_focusChannel = channelID;
 	if (m_channelHandle[m_focusChannel]==INVALID_HANDLE_VALUE)
 	{
-		UIEnable()
 		GetDlgItem(IDC_HUE_SLIDER).EnableWindow(FALSE);
 		GetDlgItem(IDC_SATURATION_SLIDER).EnableWindow(FALSE);
 		GetDlgItem(IDC_BRGHTNESS_SLIDER).EnableWindow(FALSE);
@@ -295,4 +304,3 @@ void CMainDlg::FocusChannel( int channelID )
 		m_contrastSlide.SetPos(contrast);
 	}
 }
-s

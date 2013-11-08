@@ -9,12 +9,13 @@
 #include "resource.h"
 #include "BlmMessage.h"
 #include "SettingDlg.h"
-
+#include "BlmTypes.h"
 
 enum PreviewLayout{
-	PREVIEWLAYOUT1 = 1,
-	PREVIEWLAYOUT4 = 4,
-	PREVIEWLAYOUT8 = 8
+	PREVIEWLAYOUTFULL = 0,
+	PREVIEWLAYOUT1    = 1,
+	PREVIEWLAYOUT4    = 4,
+	PREVIEWLAYOUT8    = 8
 };
 
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
@@ -23,7 +24,6 @@ class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 
 
 private:
-
 	HANDLE m_channelHandle[CHANNEL_MAX];\
 	CTrackBarCtrl m_brightnessSlide;
 	CTrackBarCtrl m_contrastSlide;
@@ -38,6 +38,8 @@ private:
 	void FocusChannel(int channelID);
 public:
 	enum { IDD = IDD_MAINDLG };
+
+	BlmUserSetting m_setting;
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnIdle();

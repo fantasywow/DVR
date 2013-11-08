@@ -206,6 +206,30 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SettingBasicDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingCradleDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingDlg.CPP"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingEncodeDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingPictureDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingRecordDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -247,6 +271,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BlmTypes.h"
+				>
+			</File>
+			<File
 				RelativePath=".\dhvecsystem.h"
 				>
 			</File>
@@ -263,7 +291,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SettingBasicDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingCradleDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SettingDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingEncodeDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingPictureDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SettingRecordDlg.h"
 				>
 			</File>
 			<File
