@@ -5,6 +5,10 @@
 #include "resource.h"
 #include "BlmMessage.h"
 
+
+class CSettingDlg;
+
+
 class CCradleSettingDlg : public CDialogImpl<CCradleSettingDlg> ,
 	public CUpdateUI<CCradleSettingDlg>,
 	public CMessageFilter, 
@@ -12,8 +16,9 @@ class CCradleSettingDlg : public CDialogImpl<CCradleSettingDlg> ,
 {
 
 private:
-
+	CSettingDlg *m_parent;
 public:
+	CCradleSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_CRADLE_SETTING };
 
 
@@ -30,6 +35,7 @@ public:
 	BEGIN_MSG_MAP(CCradleSettingDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(BM_CONFIRM_SETTING, OnConfirm)
 	END_MSG_MAP()
 
 
@@ -43,5 +49,5 @@ public:
 	}
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-
+	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 };

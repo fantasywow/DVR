@@ -14,3 +14,8 @@ LRESULT CRecordSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	
 	return true;
 }
+
+LRESULT CRecordSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	return 0;
+}

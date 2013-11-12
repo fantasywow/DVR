@@ -10,20 +10,20 @@
 #define _WIN32_WINNT	0x0501
 #define _WIN32_IE	0x0501
 #define _RICHEDIT_VER	0x0200
-
+#define  BLM_CHANNEL_MAX  8
 #include <atlbase.h>
+#include <atlstr.h>
+#define __ATLSTR_H__
 #include <atlapp.h>
-
+#define _WTL_NO_CSTRING
 #include <atlddx.h>
 
 extern CAppModule _Module;
 
 #include <atlwin.h>
-
 #include <atlframe.h>
 #include <atlctrls.h>
 #include <atldlgs.h>
-
 #include <atlmisc.h>
 
 #if defined _M_IX86

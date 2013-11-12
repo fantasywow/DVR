@@ -38,6 +38,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 
+	SYSTEMTIME systemTime;
+
 	int iBoardNum;
 	iBoardNum = InitDSPs();
 	for(int i=0;i<8;i++){
@@ -54,6 +56,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
  		for (int i=0;i<8;i++)
  		{	
 			m_channelHandle[i] = ChannelOpen(i);
+			GetLocalTime(&systemTime);
+			SetupDateTime(m_channelHandle[i], &systemTime);
 			RECT rc = {0,30,342,248};
 			StartVideoPreview(m_channelHandle[i],m_previewDlg[i],&rc,FALSE,0,25);
 		}
@@ -65,10 +69,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	GetDlgItem(IDC_SETTINGBUTTON).SetWindowPos(NULL,805,590,20,20,SWP_SHOWWINDOW);
 	//时间
 	GetDlgItem(IDC_TIME_LABEL).SetWindowPos(NULL,730,100,200,50,SWP_SHOWWINDOW);
-	SYSTEMTIME st;
 	CString time;
-	GetLocalTime(&st);
-	time.Format(L"%d.%d.%d   %d:%02d:%02d",st.wYear,st.wMonth,st.wDay,st.wHour,st.wMinute,st.wSecond);
+	GetLocalTime(&systemTime);
+	time.Format(L"%d.%d.%d   %d:%02d:%02d",systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,systemTime.wMinute,systemTime.wSecond);
 	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
 	//滑动条
 	m_hueSlide.Attach(GetDlgItem(IDC_HUE_SLIDER));
@@ -91,7 +94,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	SetTimer(1,1000);
 
 	ShowWindow(SW_SHOW);
-
+	m_settingDlg = new CSettingDlg(m_channelHandle);
 	UIAddChildWindowContainer(m_hWnd);
 	return TRUE;
 }
@@ -236,11 +239,7 @@ LRESULT CMainDlg::OnPreviewDBLCLK(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 LRESULT CMainDlg::OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (IDOK == m_settingDlg.DoModal())
-	{
-		this->m_setting = m_settingDlg.m_setting;
-	}
-	
+	m_settingDlg->DoModal();
 	return 0;
 }
 
@@ -258,11 +257,10 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 LRESULT CMainDlg::OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	int iRet;
-	if (m_channelHandle[0]!=INVALID_HANDLE_VALUE)
+	if (m_channelHandle[m_focusChannel]!=INVALID_HANDLE_VALUE)
 	{
 		iRet = SetVideoPara(m_channelHandle[0],m_brightnessSlide.GetPos(),m_contrastSlide.GetPos(),m_saturationSlide.GetPos(),m_hueSlide.GetPos());
 	}
-	ATLTRACE(L"Scroll");
 	return true;
 }
 
@@ -304,3 +302,5 @@ void CMainDlg::FocusChannel( int channelID )
 		m_contrastSlide.SetPos(contrast);
 	}
 }
+
+

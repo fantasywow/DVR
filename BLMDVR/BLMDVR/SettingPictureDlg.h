@@ -5,6 +5,10 @@
 #include "resource.h"
 #include "BlmMessage.h"
 
+
+class CSettingDlg;
+
+
 class CPictureSettingDlg : public CDialogImpl<CPictureSettingDlg> ,
 	public CUpdateUI<CPictureSettingDlg>,
 	public CMessageFilter, 
@@ -12,8 +16,11 @@ class CPictureSettingDlg : public CDialogImpl<CPictureSettingDlg> ,
 {
 
 private:
-
+	CEdit m_channelNameEdit;
+	CListViewCtrl m_channelList;
+	CSettingDlg *m_parent;
 public:
+	CPictureSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_PICTURE_SETTING };
 
 
@@ -30,6 +37,9 @@ public:
 	BEGIN_MSG_MAP(CPictureSettingDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(BM_CONFIRM_SETTING, OnConfirm)
+		NOTIFY_HANDLER(IDC_CHANNELLIST, LVN_ITEMCHANGED, OnLvnItemchangedChannellist)
+		COMMAND_HANDLER(IDC_EDIT_CHANNELNAME, EN_CHANGE, OnEnChangeEditChannelname)
 	END_MSG_MAP()
 
 
@@ -43,5 +53,7 @@ public:
 	}
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-
+	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnLvnItemchangedChannellist(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
+	LRESULT OnEnChangeEditChannelname(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };

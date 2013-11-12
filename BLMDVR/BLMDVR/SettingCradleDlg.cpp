@@ -13,3 +13,8 @@ LRESULT CCradleSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	UIAddChildWindowContainer(m_hWnd);
 	return true;
 }
+
+LRESULT CCradleSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	return 0;
+}

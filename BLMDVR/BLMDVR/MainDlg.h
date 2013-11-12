@@ -24,13 +24,15 @@ class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 
 
 private:
-	HANDLE m_channelHandle[CHANNEL_MAX];\
+
+	HANDLE m_channelHandle[BLM_CHANNEL_MAX];
+	CPreiviewDlg  m_previewDlg[BLM_CHANNEL_MAX];
+
 	CTrackBarCtrl m_brightnessSlide;
 	CTrackBarCtrl m_contrastSlide;
 	CTrackBarCtrl m_saturationSlide;
 	CTrackBarCtrl m_hueSlide;
-	CPreiviewDlg m_previewDlg[CHANNEL_MAX];
-	CSettingDlg m_settingDlg;
+	CSettingDlg*  m_settingDlg;
 	BOOL m_isFullScreen;
 	PreviewLayout m_lastLayout;
 	int m_focusChannel;
@@ -38,8 +40,6 @@ private:
 	void FocusChannel(int channelID);
 public:
 	enum { IDD = IDD_MAINDLG };
-
-	BlmUserSetting m_setting;
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnIdle();
@@ -62,11 +62,6 @@ public:
 		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
 	END_MSG_MAP()
 
-// Handler prototypes (uncomment arguments if needed):
-//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-//	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-//	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
-
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnCapturePicture(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -81,4 +76,5 @@ public:
 	LRESULT OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	
 };

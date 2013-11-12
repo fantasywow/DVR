@@ -1,8 +1,5 @@
 #pragma once
 
-typedef struct _userSetting{
-
-}BlmUserSetting;
 
 typedef struct _encodeSetting{
 	int audio;
@@ -16,3 +13,7 @@ typedef struct _encodeSetting{
 	int frameRate_sub;
 	int maxBit_sub;
 }BlmEncodeSetting;
+
+typedef struct _userSetting{
+	BlmEncodeSetting m_encodeSetting;
+}BlmUserSetting;
