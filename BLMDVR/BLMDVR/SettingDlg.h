@@ -27,9 +27,11 @@ private:
 	
 public:
 	HANDLE *m_channelHandle;
-	BlmUserSetting m_setting[BLM_CHANNEL_MAX];
+	BlmEncodeSetting m_encodeSetting[BLM_CHANNEL_MAX];
 	CString m_channelName[BLM_CHANNEL_MAX];
 	CString m_capturePath;
+	bool m_osdName[BLM_CHANNEL_MAX];
+	bool m_osdTime[BLM_CHANNEL_MAX];
 	
 	enum { IDD = IDD_SETTINGDLG };
 

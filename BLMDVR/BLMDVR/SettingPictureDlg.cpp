@@ -14,6 +14,8 @@ LRESULT CPictureSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPAR
 
 	m_channelNameEdit = GetDlgItem(IDC_EDIT_CHANNELNAME);
 	m_channelNameEdit.EnableWindow(FALSE);
+	GetDlgItem(IDC_CHECK_OSDNAME).EnableWindow(FALSE);
+	GetDlgItem(IDC_CHECK_OSDTIME).EnableWindow(FALSE);
 	m_channelList = GetDlgItem(IDC_CHANNEL_LIST);
 	m_channelList.SetWindowLong(GWL_STYLE, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE );
 	m_channelList.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_FLATSB);
@@ -27,9 +29,11 @@ LRESULT CPictureSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPAR
 			channelID.Format(L"%d",i);
 			m_channelList.AddItem(j,0,channelID);
 			m_channelList.AddItem(j,1,m_parent->m_channelName[i]);
+			m_channelIndex[j]=i;
 			j++;
 /*		}*/
 	}
+
 	return true;
 }
 
@@ -38,9 +42,15 @@ LRESULT CPictureSettingDlg::OnLvnItemchangedChannellist(int /*idCtrl*/, LPNMHDR 
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
 	if (pNMLV->uNewState&LVIS_SELECTED) 
 	{
+		int index = m_channelList.GetSelectedIndex();
 		m_channelNameEdit.EnableWindow(TRUE);
+		GetDlgItem(IDC_CHECK_OSDNAME).EnableWindow(TRUE);
+		GetDlgItem(IDC_CHECK_OSDTIME).EnableWindow(TRUE);
+		m_osdNameCheck = m_parent->m_osdName[m_channelIndex[index]];
+		m_osdTimeCheck = m_parent->m_osdTime[m_channelIndex[index]];
+		DoDataExchange(FALSE);
 		CString buff;
-		m_channelList.GetItemText(m_channelList.GetSelectedIndex(),1,buff);
+		m_channelList.GetItemText(index,1,buff);
 		m_channelNameEdit.SetWindowText(buff);
 	}	
 	return 0;
@@ -49,7 +59,6 @@ LRESULT CPictureSettingDlg::OnLvnItemchangedChannellist(int /*idCtrl*/, LPNMHDR 
 
 LRESULT CPictureSettingDlg::OnEnChangeEditChannelname(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	ATLTRACE(L"test");
 	CString temp;
 	m_channelNameEdit.GetWindowText(temp);
 	m_channelList.AddItem(m_channelList.GetSelectedIndex(),1,temp);
@@ -58,6 +67,13 @@ LRESULT CPictureSettingDlg::OnEnChangeEditChannelname(WORD /*wNotifyCode*/, WORD
 
 LRESULT CPictureSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
+	DoDataExchange(true);
+	int index = m_channelList.GetSelectedIndex();
+	if (index != -1)
+	{
+		m_parent->m_osdName[index]=m_osdNameCheck;
+		m_parent->m_osdTime[index]=m_osdTimeCheck;
+	}
 	for (int i=0,j=0;i<BLM_CHANNEL_MAX;i++)
 	{
 // 		if (m_parent->m_channelHandle[i]!=INVALID_HANDLE_VALUE)

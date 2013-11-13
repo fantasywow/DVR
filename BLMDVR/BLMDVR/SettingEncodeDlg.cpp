@@ -20,15 +20,65 @@ LRESULT CEncodeSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	m_channelList.AddColumn(L"通道名称", 1);
 	for (int i=0,j=0;i<BLM_CHANNEL_MAX;i++)
 	{
-		if (m_parent->m_channelHandle[i]!=INVALID_HANDLE_VALUE)
-		{
+		//if (m_parent->m_channelHandle[i]!=INVALID_HANDLE_VALUE)
+		//{
 			CString channelID;
 			channelID.Format(L"%d",i);
 			m_channelList.AddItem(j,0,channelID);
 			m_channelList.AddItem(j,1,m_parent->m_channelName[i]);
-		}
+			m_channelIndex[j]=i;
+			j++;
+		//}
 	}
+	initComboBox();
 
+	return true;
+}
+
+
+LRESULT CEncodeSettingDlg::OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	if (pNMLV->uNewState&LVIS_SELECTED) 
+	{
+		m_selectedChannel = m_channelList.GetSelectedIndex();   //获得点击的那个行
+		updateChooseChannel();
+	}	
+	return 0;
+}
+
+LRESULT CEncodeSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	if (m_selectedChannel != -1)
+	{
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality =m_quality.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality_sub = m_quality_sub.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format = m_format.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format_sub = m_format_sub.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate = m_frameRate.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate = m_frameRate_sub.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit = m_maxBit.GetCurSel();
+		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit_sub = m_maxBit_sub.GetCurSel();
+	}
+	
+	return 0;
+}
+
+void CEncodeSettingDlg::updateChooseChannel()
+{
+	m_quality.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality);
+	m_quality_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality_sub);
+	m_format.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format);
+	m_format_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format_sub);
+	m_frameRate.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate);
+	m_frameRate_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate);
+	m_maxBit.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit);
+	m_maxBit_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit_sub);
+}
+
+void CEncodeSettingDlg::initComboBox()
+{
 	m_quality=GetDlgItem(IDC_COMBO_QUALITY);
 	m_quality.AddString(L"最好");
 	m_quality.AddString(L"较好");
@@ -59,25 +109,4 @@ LRESULT CEncodeSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	m_maxBit.AddString(L"300");
 	m_maxBit_sub=GetDlgItem(IDC_COMBO_MAXBIT_SUB);
 	m_maxBit_sub.AddString(L"300");
-
-
-	return true;
-}
-
-
-LRESULT CEncodeSettingDlg::OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
-{
-	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
-	// TODO: 在此添加控件通知处理程序代码
-	if (pNMLV->uNewState&LVIS_SELECTED) 
-	{
-		m_selectedChannel = m_channelList.GetSelectedIndex();   //获得点击的那个行
-		
-	}	
-	return 0;
-}
-
-LRESULT CEncodeSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
-{
-	return 0;
 }

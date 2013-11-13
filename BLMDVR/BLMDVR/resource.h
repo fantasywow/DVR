@@ -48,11 +48,13 @@
 #define IDC_LIST1                       1042
 #define IDC_CHANNEL_LIST                1042
 #define IDC_LIST_DISK                   1042
-#define IDC_CHANNELLIST                 1042
 #define IDC_CONFIRM                     1043
 #define IDC_CANCEL                      1044
-#define IDC_EDIT1                       1045
 #define IDC_EDIT_CHANNELNAME            1045
+#define IDC_STATIC_HUE                  1046
+#define IDC_STATIC_CONTRAST             1047
+#define IDC_STATIC_SATURATION           1048
+#define IDC_STATIC_BRGHTNESS            1049
 #define IDC_LAYOUTBUTTON1               1077
 #define IDC_LAYOUTBUTTON4               1078
 #define IDC_LAYOUTBUTTON8               1079
@@ -64,7 +66,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        207
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1046
+#define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

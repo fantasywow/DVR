@@ -27,11 +27,9 @@ private:
 
 	HANDLE m_channelHandle[BLM_CHANNEL_MAX];
 	CPreiviewDlg  m_previewDlg[BLM_CHANNEL_MAX];
-
-	CTrackBarCtrl m_brightnessSlide;
-	CTrackBarCtrl m_contrastSlide;
-	CTrackBarCtrl m_saturationSlide;
-	CTrackBarCtrl m_hueSlide;
+	SYSTEMTIME m_systemTime;
+	CTrackBarCtrl m_brightnessSlide,m_contrastSlide,m_saturationSlide,m_hueSlide;
+	CStatic m_brightnessTitle,m_contrastTitle,m_saturationTitle,m_hueTitle;
 	CSettingDlg*  m_settingDlg;
 	BOOL m_isFullScreen;
 	PreviewLayout m_lastLayout;
@@ -76,5 +74,11 @@ public:
 	LRESULT OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	
+	void updateSetting();
+	void initSlide();
+	void initTimeLabel();
+	void initBottomButton();
+	void initDH();
+	void initPreviewDlg();
+	void initValue();
 };

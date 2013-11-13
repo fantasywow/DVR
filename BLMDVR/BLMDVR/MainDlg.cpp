@@ -21,11 +21,7 @@ BOOL CMainDlg::OnIdle()
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	// center the dialog on the screen
-	SetWindowPos(NULL,0,0,1000,700,SWP_HIDEWINDOW);
-	CenterWindow();
-
-	m_isFullScreen = FALSE;
+	
 
 	// set icons
 	HICON hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
@@ -37,65 +33,23 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	ATLASSERT(pLoop != NULL);
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
-
-	SYSTEMTIME systemTime;
-
-	int iBoardNum;
-	iBoardNum = InitDSPs();
-	for(int i=0;i<8;i++){
-		m_previewDlg[i].Create(m_hWnd,i);
-	}
-  	if (iBoardNum <= 0)
-  	{
-  		MessageBox(L"大华卡初始化失败!\n");
-		for (int i=0;i<8;i++)
-		{
-			m_channelHandle[i] = INVALID_HANDLE_VALUE;
-		}
-  	}else{
- 		for (int i=0;i<8;i++)
- 		{	
-			m_channelHandle[i] = ChannelOpen(i);
-			GetLocalTime(&systemTime);
-			SetupDateTime(m_channelHandle[i], &systemTime);
-			RECT rc = {0,30,342,248};
-			StartVideoPreview(m_channelHandle[i],m_previewDlg[i],&rc,FALSE,0,25);
-		}
-	}
-	//底部按钮
-	GetDlgItem(IDC_LAYOUTBUTTON1).SetWindowPos(NULL,730,590,20,20,SWP_SHOWWINDOW);
-	GetDlgItem(IDC_LAYOUTBUTTON4).SetWindowPos(NULL,755,590,20,20,SWP_SHOWWINDOW);
-	GetDlgItem(IDC_LAYOUTBUTTON8).SetWindowPos(NULL,780,590,20,20,SWP_SHOWWINDOW);
-	GetDlgItem(IDC_SETTINGBUTTON).SetWindowPos(NULL,805,590,20,20,SWP_SHOWWINDOW);
-	//时间
-	GetDlgItem(IDC_TIME_LABEL).SetWindowPos(NULL,730,100,200,50,SWP_SHOWWINDOW);
-	CString time;
-	GetLocalTime(&systemTime);
-	time.Format(L"%d.%d.%d   %d:%02d:%02d",systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,systemTime.wMinute,systemTime.wSecond);
-	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
-	//滑动条
-	m_hueSlide.Attach(GetDlgItem(IDC_HUE_SLIDER));
-	m_hueSlide.SetWindowPos(NULL,730,150,200,50,SWP_SHOWWINDOW);
-	m_hueSlide.SetRange(0,255,TRUE);
-	m_saturationSlide.Attach(GetDlgItem(IDC_SATURATION_SLIDER));
-	m_saturationSlide.SetWindowPos(NULL,730,200,200,50,SWP_SHOWWINDOW);
-	m_saturationSlide.SetRange(0,255,TRUE);
-	m_brightnessSlide.Attach(GetDlgItem(IDC_BRGHTNESS_SLIDER));
-	m_brightnessSlide.SetWindowPos(NULL,730,250,200,50,SWP_SHOWWINDOW);
-	m_brightnessSlide.SetRange(0,255,TRUE);
-	m_contrastSlide.Attach(GetDlgItem(IDC_CONTRAST_SLIDER));
-	m_contrastSlide.SetWindowPos(NULL,730,300,200,50,SWP_SHOWWINDOW);
-	m_contrastSlide.SetRange(0,255,TRUE);
+	UIAddChildWindowContainer(m_hWnd);
+	
+	initDH();
+	initPreviewDlg();
+	initBottomButton();
+	initTimeLabel();
+	initSlide();
+	initValue();
 	//默认选中channel 0
 	FocusChannel(0);
 	//默认布局
 	SetPreviewDlgLayout(PREVIEWLAYOUT4,0);
 	//计时器
 	SetTimer(1,1000);
-
-	ShowWindow(SW_SHOW);
-	m_settingDlg = new CSettingDlg(m_channelHandle);
-	UIAddChildWindowContainer(m_hWnd);
+	SetWindowPos(NULL,0,0,1000,700,SWP_SHOWWINDOW);
+	CenterWindow();
+	
 	return TRUE;
 }
 
@@ -240,6 +194,7 @@ LRESULT CMainDlg::OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, H
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_settingDlg->DoModal();
+	updateSetting();
 	return 0;
 }
 
@@ -301,6 +256,92 @@ void CMainDlg::FocusChannel( int channelID )
 		m_brightnessSlide.SetPos(brightness);
 		m_contrastSlide.SetPos(contrast);
 	}
+}
+
+void CMainDlg::updateSetting()
+{
+	//todo
+}
+
+void CMainDlg::initSlide()
+{
+	m_hueTitle.Attach(GetDlgItem(IDC_STATIC_HUE));
+	m_hueTitle.SetWindowText(L"色相");
+	m_hueTitle.SetWindowPos(NULL,730,130,50,20,SWP_SHOWWINDOW);
+	m_hueSlide.Attach(GetDlgItem(IDC_HUE_SLIDER));
+	m_hueSlide.SetWindowPos(NULL,730,150,200,30,SWP_SHOWWINDOW);
+	m_hueSlide.SetRange(0,255,TRUE);
+	m_saturationTitle.Attach(GetDlgItem(IDC_STATIC_SATURATION));
+	m_saturationTitle.SetWindowText(L"饱和度");
+	m_saturationTitle.SetWindowPos(NULL,730,180,50,20,SWP_SHOWWINDOW);
+	m_saturationSlide.Attach(GetDlgItem(IDC_SATURATION_SLIDER));
+	m_saturationSlide.SetWindowPos(NULL,730,200,200,30,SWP_SHOWWINDOW);
+	m_saturationSlide.SetRange(0,255,TRUE);
+	m_brightnessTitle.Attach(GetDlgItem(IDC_STATIC_BRGHTNESS));
+	m_brightnessTitle.SetWindowText(L"亮度");
+	m_brightnessTitle.SetWindowPos(NULL,730,230,50,20,SWP_SHOWWINDOW);
+	m_brightnessSlide.Attach(GetDlgItem(IDC_BRGHTNESS_SLIDER));
+	m_brightnessSlide.SetWindowPos(NULL,730,250,200,30,SWP_SHOWWINDOW);
+	m_brightnessSlide.SetRange(0,255,TRUE);
+	m_contrastTitle.Attach(GetDlgItem(IDC_STATIC_CONTRAST));
+	m_contrastTitle.SetWindowText(L"对比度");
+	m_contrastTitle.SetWindowPos(NULL,730,280,50,20,SWP_SHOWWINDOW);
+	m_contrastSlide.Attach(GetDlgItem(IDC_CONTRAST_SLIDER));
+	m_contrastSlide.SetWindowPos(NULL,730,300,200,30,SWP_SHOWWINDOW);
+	m_contrastSlide.SetRange(0,255,TRUE);
+}
+
+void CMainDlg::initTimeLabel()
+{
+	GetDlgItem(IDC_TIME_LABEL).SetWindowPos(NULL,750,50,200,50,SWP_SHOWWINDOW);
+	CString time;
+	GetLocalTime(&m_systemTime);
+	time.Format(L"%d.%d.%d   %d:%02d:%02d",m_systemTime.wYear,m_systemTime.wMonth,m_systemTime.wDay,m_systemTime.wHour,m_systemTime.wMinute,m_systemTime.wSecond);
+	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
+}
+
+void CMainDlg::initBottomButton()
+{
+	GetDlgItem(IDC_LAYOUTBUTTON1).SetWindowPos(NULL,730,590,20,20,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_LAYOUTBUTTON4).SetWindowPos(NULL,755,590,20,20,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_LAYOUTBUTTON8).SetWindowPos(NULL,780,590,20,20,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_SETTINGBUTTON).SetWindowPos(NULL,805,590,20,20,SWP_SHOWWINDOW);
+}
+
+void CMainDlg::initDH()
+{
+	int iBoardNum;
+	iBoardNum = InitDSPs();
+	if (iBoardNum <= 0)
+	{
+		MessageBox(L"大华卡初始化失败!\n");
+		for (int i=0;i<8;i++)
+		{
+			m_channelHandle[i] = INVALID_HANDLE_VALUE;
+		}
+	}else{
+		for (int i=0;i<8;i++)
+		{	
+			m_channelHandle[i] = ChannelOpen(i);
+			GetLocalTime(&m_systemTime);
+			SetupDateTime(m_channelHandle[i], &m_systemTime);
+			RECT rc = {0,30,342,248};
+			StartVideoPreview(m_channelHandle[i],m_previewDlg[i],&rc,FALSE,0,25);
+		}
+	}
+}
+
+void CMainDlg::initPreviewDlg()
+{
+	for(int i=0;i<8;i++){
+		m_previewDlg[i].Create(m_hWnd,i);
+	}
+}
+
+void CMainDlg::initValue()
+{
+	m_isFullScreen = FALSE;
+	m_settingDlg = new CSettingDlg(m_channelHandle);
 }
 
 

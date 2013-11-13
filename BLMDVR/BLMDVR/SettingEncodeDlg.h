@@ -17,6 +17,7 @@ class CEncodeSettingDlg : public CDialogImpl<CEncodeSettingDlg> ,
 
 private:
 	CListViewCtrl m_channelList;
+	int m_channelIndex[BLM_CHANNEL_MAX];
 	CComboBox m_quality,m_quality_sub,m_format,m_format_sub,m_frameRate,m_frameRate_sub,m_maxBit,m_maxBit_sub;
 	BlmEncodeSetting m_encodeSetting[8];
 	int m_selectedChannel;
@@ -57,4 +58,6 @@ public:
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
+	void updateChooseChannel();
+	void initComboBox();
 };
