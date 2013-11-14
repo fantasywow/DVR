@@ -10,6 +10,7 @@
 #include "BlmMessage.h"
 #include "SettingDlg.h"
 #include "BlmTypes.h"
+#include "PlayDlg.h"
 
 enum PreviewLayout{
 	PREVIEWLAYOUTFULL = 0,
@@ -24,7 +25,7 @@ class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 
 
 private:
-
+	CPlayDlg m_playDlg;
 	HANDLE m_channelHandle[BLM_CHANNEL_MAX];
 	CPreiviewDlg  m_previewDlg[BLM_CHANNEL_MAX];
 	SYSTEMTIME m_systemTime;
@@ -37,6 +38,7 @@ private:
 	void SetPreviewDlgLayout(PreviewLayout layout,int channelID);
 	void FocusChannel(int channelID);
 public:
+	char *psText;
 	enum { IDD = IDD_MAINDLG };
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -58,6 +60,7 @@ public:
 		COMMAND_HANDLER(IDC_SETTINGBUTTON, BN_CLICKED, OnBnClickedSettingbutton)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
+		COMMAND_HANDLER(IDC_BUTTON_CHOOSEFILE, BN_CLICKED, OnBnClickedButtonChoosefile)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -81,4 +84,5 @@ public:
 	void initDH();
 	void initPreviewDlg();
 	void initValue();
+	LRESULT OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };

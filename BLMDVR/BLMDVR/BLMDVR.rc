@@ -146,6 +146,13 @@ BEGIN
     LTEXT           "RECODE",IDC_STATIC,39,19,68,40
 END
 
+IDD_DIALOG_PLAY DIALOGEX 0, 0, 316, 183
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Play"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -202,6 +209,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 263
     END
+
+    IDD_DIALOG_PLAY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 309
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -241,6 +256,7 @@ BEGIN
     LTEXT           "??",IDC_STATIC_CONTRAST,366,77,17,8
     LTEXT           "??",IDC_STATIC_SATURATION,389,74,17,8
     LTEXT           "??",IDC_STATIC_BRGHTNESS,403,74,17,8
+    PUSHBUTTON      "choose file",IDC_BUTTON_CHOOSEFILE,349,294,50,14
 END
 
 

@@ -1,4 +1,3 @@
-
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -22,6 +21,7 @@ private:
 	CSettingDlg *m_parent;
 	int m_osdNameCheck,m_osdTimeCheck;
 	int m_channelIndex[BLM_CHANNEL_MAX];
+
 public:
 	CPictureSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_PICTURE_SETTING };

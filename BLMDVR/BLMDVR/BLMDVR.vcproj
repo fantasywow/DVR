@@ -72,7 +72,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dhvecsystem.lib"
+				AdditionalDependencies="dhvecsystem.lib dhplay.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlayDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PreviewDlg.CPP"
 				>
 			</File>
@@ -275,11 +279,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dhplay.h"
+				>
+			</File>
+			<File
 				RelativePath=".\dhvecsystem.h"
 				>
 			</File>
 			<File
 				RelativePath=".\MainDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayDlg.h"
 				>
 			</File>
 			<File

@@ -7,7 +7,7 @@ typedef struct _encodeSetting{
 	int format;
 	int frameRate;
 	int maxBit;
-	int isSub;
+	int sub;
 	int quality_sub;
 	int format_sub;
 	int frameRate_sub;
@@ -18,7 +18,7 @@ typedef struct _encodeSetting{
 		format=0;
 		frameRate=0;
 		maxBit=0;
-		isSub=0;
+		sub=0;
 		quality_sub=0;
 		format_sub=0;
 		frameRate_sub=0;

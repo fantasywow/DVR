@@ -11,7 +11,7 @@ LRESULT CEncodeSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
-	
+	memcpy(m_localEncodeSetting,m_parent->m_encodeSetting,sizeof(BlmEncodeSetting)*BLM_CHANNEL_MAX);
 	m_selectedChannel = -1;
 	m_channelList = GetDlgItem(IDC_CHANNEL_LIST);
 	m_channelList.SetWindowLong(GWL_STYLE, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE );
@@ -31,7 +31,6 @@ LRESULT CEncodeSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 		//}
 	}
 	initComboBox();
-
 	return true;
 }
 
@@ -42,6 +41,19 @@ LRESULT CEncodeSettingDlg::OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR p
 	// TODO: 在此添加控件通知处理程序代码
 	if (pNMLV->uNewState&LVIS_SELECTED) 
 	{
+		if (m_selectedChannel != -1)
+		{
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].audio =m_captureAudio;
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].sub = m_captureSub;
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].quality =m_quality.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].quality_sub = m_quality_sub.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].format = m_format.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].format_sub = m_format_sub.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].frameRate = m_frameRate.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].frameRate = m_frameRate_sub.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].maxBit = m_maxBit.GetCurSel();
+			m_localEncodeSetting[m_channelIndex[m_selectedChannel]].maxBit_sub = m_maxBit_sub.GetCurSel();
+		}
 		m_selectedChannel = m_channelList.GetSelectedIndex();   //获得点击的那个行
 		updateChooseChannel();
 	}	
@@ -50,31 +62,24 @@ LRESULT CEncodeSettingDlg::OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR p
 
 LRESULT CEncodeSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
-	if (m_selectedChannel != -1)
-	{
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality =m_quality.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality_sub = m_quality_sub.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format = m_format.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format_sub = m_format_sub.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate = m_frameRate.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate = m_frameRate_sub.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit = m_maxBit.GetCurSel();
-		m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit_sub = m_maxBit_sub.GetCurSel();
-	}
-	
+	memcpy(m_parent->m_encodeSetting,m_localEncodeSetting,sizeof(BlmEncodeSetting)*BLM_CHANNEL_MAX);
 	return 0;
 }
 
 void CEncodeSettingDlg::updateChooseChannel()
 {
-	m_quality.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality);
-	m_quality_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].quality_sub);
-	m_format.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format);
-	m_format_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].format_sub);
-	m_frameRate.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate);
-	m_frameRate_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].frameRate);
-	m_maxBit.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit);
-	m_maxBit_sub.SetCurSel(m_parent->m_encodeSetting[m_channelIndex[m_selectedChannel]].maxBit_sub);
+	m_captureAudio = m_localEncodeSetting[m_channelIndex[m_selectedChannel]].audio;
+	m_captureSub = m_localEncodeSetting[m_channelIndex[m_selectedChannel]].sub;
+	m_quality.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].quality);
+	m_quality_sub.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].quality_sub);
+	m_format.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].format);
+	m_format_sub.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].format_sub);
+	m_frameRate.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].frameRate);
+	m_frameRate_sub.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].frameRate);
+	m_maxBit.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].maxBit);
+	m_maxBit_sub.SetCurSel(m_localEncodeSetting[m_channelIndex[m_selectedChannel]].maxBit_sub);
+	DoDataExchange(FALSE);
+	checkSub();
 }
 
 void CEncodeSettingDlg::initComboBox()
@@ -110,3 +115,27 @@ void CEncodeSettingDlg::initComboBox()
 	m_maxBit_sub=GetDlgItem(IDC_COMBO_MAXBIT_SUB);
 	m_maxBit_sub.AddString(L"300");
 }
+
+LRESULT CEncodeSettingDlg::OnBnClickedCheckSub(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// TODO: 在此添加控件通知处理程序代码
+	checkSub();
+	return 0;
+}
+
+void CEncodeSettingDlg::checkSub()
+{
+	DoDataExchange(true);
+	if (m_captureSub == false){
+		m_quality_sub.EnableWindow(FALSE);
+		m_format_sub.EnableWindow(FALSE);
+		m_frameRate_sub.EnableWindow(FALSE);
+		m_maxBit_sub.EnableWindow(FALSE);
+	}else{
+		m_quality_sub.EnableWindow(TRUE);
+		m_format_sub.EnableWindow(TRUE);
+		m_frameRate_sub.EnableWindow(TRUE);
+		m_maxBit_sub.EnableWindow(TRUE);
+	}
+}
+
