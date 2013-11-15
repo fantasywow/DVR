@@ -11,8 +11,8 @@
 #define IDD_ENCODE_SETTING              207
 #define IDD_CRADLE_SETTING              208
 #define IDD_RECORD_SETTING              209
-#define IDD_DIALOG1                     210
 #define IDD_DIALOG_PLAY                 210
+#define IDD_DIALOG_PLAYWINDOW           211
 #define IDC_CAPTURE_PICTURE             1000
 #define IDC_SATURATION_SLIDER           1003
 #define IDC_CONTRAST_SLIDER             1004
@@ -58,6 +58,7 @@
 #define IDC_STATIC_SATURATION           1048
 #define IDC_STATIC_BRGHTNESS            1049
 #define IDC_BUTTON_CHOOSEFILE           1050
+#define IDC_PROGRESS1                   1051
 #define IDC_LAYOUTBUTTON1               1077
 #define IDC_LAYOUTBUTTON4               1078
 #define IDC_LAYOUTBUTTON8               1079
@@ -67,9 +68,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        211
+#define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1051
+#define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

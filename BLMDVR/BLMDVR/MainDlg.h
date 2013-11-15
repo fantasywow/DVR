@@ -25,7 +25,7 @@ class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 
 
 private:
-	CPlayDlg m_playDlg;
+	CPlayDlg *m_playDlg;
 	HANDLE m_channelHandle[BLM_CHANNEL_MAX];
 	CPreiviewDlg  m_previewDlg[BLM_CHANNEL_MAX];
 	SYSTEMTIME m_systemTime;
@@ -38,7 +38,7 @@ private:
 	void SetPreviewDlgLayout(PreviewLayout layout,int channelID);
 	void FocusChannel(int channelID);
 public:
-	char *psText;
+	char psText[MAX_PATH*2];
 	enum { IDD = IDD_MAINDLG };
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);

@@ -1,22 +1,26 @@
 #include "stdafx.h"
 #include "PlayDlg.h"
+#include "dhplay.h"
+
+
 
 
 LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
+	SetWindowPos(NULL,0,0,600,400,SWP_SHOWWINDOW);
 	CenterWindow();
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
-	
-// 	LONG port;
-// 	PLAY_GetFreePort(&port);
-// 	PLAY_OpenFile(port,psText);
-// 	BOOL test;
-// 	test = PLAY_Play(port,this);
 
+	RECT rect = {124, 0, 124+352, 288};
+	m_playWindow.Create(m_hWnd, rect ,NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);		
+	
+	PLAY_GetFreePort(&m_port);
+	PLAY_OpenFile(m_port,m_filePath);
+	PLAY_Play(m_port,m_playWindow.m_hWnd);
 
 	return TRUE;
 }

@@ -6,6 +6,26 @@
 #include "BlmTypes.h"
 #include "dhvecsystem.h"
 
+class CPlayWindow : public CFrameWindowImpl<CPlayWindow>
+{
+public:
+	DECLARE_WND_CLASS(NULL)
+// 	BEGIN_MSG_MAP(CPlayWindow)
+// 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+// 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
+// 	END_MSG_MAP()
+// 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+// 	{
+// 		CPaintDC dc(m_hWnd);
+// 		//TODO: Add your drawing code here
+// 		return 0;
+// 	}
+// 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+// 	{
+// 		return 0;
+// 	}
+};
+
 
 class CPlayDlg : public CDialogImpl<CPlayDlg> ,
 	public CUpdateUI<CPlayDlg>,
@@ -13,9 +33,11 @@ class CPlayDlg : public CDialogImpl<CPlayDlg> ,
 	public CIdleHandler
 {
 private:
-
+	char *m_filePath;
+	CPlayWindow m_playWindow;
+	LONG m_port;
 public:
-
+	CPlayDlg(char *filePath){m_filePath = filePath;}
 	enum { IDD = IDD_DIALOG_PLAY };
 
 

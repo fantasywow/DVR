@@ -354,7 +354,8 @@ LRESULT CMainDlg::OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/
 	//  为这个成员使用OPENFILENAME_SIZE_VERSION_400。  
 	// Windows 2000及更高版本：这个参数使用sizeof (OPENFILENAME) 。  
 	ofn.hwndOwner =GetForegroundWindow();// 打开OR保存文件对话框的父窗口  
-	ofn.lpstrFilter = TEXT("All\0*.*\0Text\0*.TXT\0");   
+	//ofn.lpstrFilter = TEXT("All\0*.*\0Text\0*.TXT\0");   
+	ofn.lpstrFilter = TEXT("264\0*.264\0");   
 	//过滤器 如果为 NULL 不使用过滤器  
 	//具体用法看上面  注意 /0  
 	lstrcpy(szPathName, TEXT(""));  
@@ -370,23 +371,11 @@ LRESULT CMainDlg::OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/
 	BOOL bOk = GetOpenFileName(&ofn);//调用对话框打开文件  
 	if (bOk)  
 	{  
-		DWORD dwNum = WideCharToMultiByte(CP_OEMCP,NULL,szPathName,-1,NULL,0,NULL,FALSE);
-		psText= new char[dwNum];
-		if(!psText)
-		{
-			delete []psText;
-		}
-		WideCharToMultiByte (CP_OEMCP,NULL,szPathName,-1,psText,dwNum,NULL,FALSE);
-		
-		//MessageBox(strFile);
-		LONG port;
-		PLAY_GetFreePort(&port);
-		PLAY_OpenFile(port,psText);
-		m_playDlg.Create(NULL);
-		m_playDlg.ShowWindow(TRUE);
-		PLAY_Play(port,m_playDlg);
-		
-		delete []psText;
+		WideCharToMultiByte (CP_OEMCP,NULL,szPathName,-1,psText,MAX_PATH*2,NULL,FALSE);		
+		m_playDlg = new CPlayDlg(psText);
+		m_playDlg->Create(NULL);
+		m_playDlg->ShowWindow(TRUE);
+	
 	} 
 	return 0;
 }
