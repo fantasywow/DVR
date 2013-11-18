@@ -58,7 +58,11 @@
 #define IDC_STATIC_SATURATION           1048
 #define IDC_STATIC_BRGHTNESS            1049
 #define IDC_BUTTON_CHOOSEFILE           1050
-#define IDC_PROGRESS1                   1051
+#define IDC_STATIC_TOTALTIME            1053
+#define IDC_SLIDER_TIME                 1054
+#define IDC_STATIC_PLAYEDTIME           1055
+#define IDC_BUTTON1                     1057
+#define IDC_BUTTON_PAUSE                1057
 #define IDC_LAYOUTBUTTON1               1077
 #define IDC_LAYOUTBUTTON4               1078
 #define IDC_LAYOUTBUTTON8               1079
@@ -70,7 +74,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1052
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

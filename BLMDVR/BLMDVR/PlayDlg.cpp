@@ -17,11 +17,20 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 	RECT rect = {124, 0, 124+352, 288};
 	m_playWindow.Create(m_hWnd, rect ,NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);		
-	
+	m_timeSlide.Attach(GetDlgItem(IDC_SLIDER_TIME));
+	m_timeSlide.SetRange(0,99,TRUE);
+	GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"ÔÝÍ£");
+
 	PLAY_GetFreePort(&m_port);
 	PLAY_OpenFile(m_port,m_filePath);
-	PLAY_Play(m_port,m_playWindow.m_hWnd);
 
+	m_totalTime= PLAY_GetFileTime(m_port);
+	CString totalTime;
+	totalTime.Format(L"%dH%dM%dS",m_totalTime/3600,m_totalTime%3600/60,m_totalTime%60);
+	SetTimer(1,100);
+	GetDlgItem(IDC_STATIC_TOTALTIME).SetWindowText(totalTime);
+	PLAY_Play(m_port,m_playWindow.m_hWnd);
+	m_isPlaying = TRUE;
 	return TRUE;
 }
 
@@ -40,5 +49,47 @@ LRESULT CPlayDlg::OnClose(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL
 {
 	//EndDialog(0);
 	DestroyWindow();
+	return 0;
+}
+
+LRESULT CPlayDlg::OnTimer( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	int m_playedTimeEx = PLAY_GetPlayedTimeEx(m_port);
+	m_playedTime =m_playedTimeEx/1000;
+	int second = ((double)(m_playedTimeEx%60000))/1000+0.5;
+	//PLAY_GetPlayPos(m_port);
+	//m_timeSlide.SetPos(m_playedTime*100/m_totalTime);
+	m_timeSlide.SetPos(PLAY_GetPlayPos(m_port)*100);
+
+	CString palyedTime;
+	palyedTime.Format(L"%dH%dM%dS",m_playedTime/3600,m_playedTime%3600/60,second);
+	GetDlgItem(IDC_STATIC_PLAYEDTIME).SetWindowText(palyedTime);
+
+	return TRUE;
+}
+
+LRESULT CPlayDlg::OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	double temp = m_timeSlide.GetPos();
+	PLAY_SetPlayPos(m_port,temp/100);
+
+	return 0;
+}
+
+LRESULT CPlayDlg::OnBnClickedButtonPause(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	if (m_isPlaying)
+	{
+		PLAY_Pause(m_port,TRUE);
+		m_isPlaying = FALSE;
+		GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"²¥·Å");
+	} 
+	else
+	{
+		PLAY_Pause(m_port,FALSE);
+		m_isPlaying = TRUE;
+		GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"ÔÝÍ£");
+	}
+	
 	return 0;
 }

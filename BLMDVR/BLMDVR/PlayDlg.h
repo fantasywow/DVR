@@ -36,6 +36,9 @@ private:
 	char *m_filePath;
 	CPlayWindow m_playWindow;
 	LONG m_port;
+	CTrackBarCtrl m_timeSlide;
+	int m_playedTime,m_totalTime;
+	BOOL m_isPlaying;
 public:
 	CPlayDlg(char *filePath){m_filePath = filePath;}
 	enum { IDD = IDD_DIALOG_PLAY };
@@ -54,13 +57,19 @@ public:
 	BEGIN_MSG_MAP(CPlayDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		//MESSAGE_HANDLER(WM_CLOSE,OnClose)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		COMMAND_ID_HANDLER(IDCANCEL, OnClose)
+		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
+		COMMAND_HANDLER(IDC_BUTTON_PAUSE, BN_CLICKED, OnBnClickedButtonPause)
 	END_MSG_MAP()
 
 	LRESULT OnClose(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	//LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	
+	LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+
+	LRESULT OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedButtonPause(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };
