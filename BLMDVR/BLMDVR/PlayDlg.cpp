@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PlayDlg.h"
 #include "dhplay.h"
-
+#include "BlmDateTimeCtrl.h"
 
 
 
@@ -31,6 +31,15 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	GetDlgItem(IDC_STATIC_TOTALTIME).SetWindowText(totalTime);
 	PLAY_Play(m_port,m_playWindow.m_hWnd);
 	m_isPlaying = TRUE;
+
+	CBlmDateTimeCtrl blmdatectrl;
+	blmdatectrl.InitBlmCalendar(_datetime_t::now(), "%Y-%m-%d %H:%M:%S" ); //第1个参数是默认显示的日期，第二个参数是显示的日期格式
+	blmdatectrl.Create(m_hWnd);
+	blmdatectrl.MoveWindow(0,0,300,300,TRUE);//参数需要补充
+	blmdatectrl.ShowWindow(SW_SHOW);
+	
+
+
 	return TRUE;
 }
 

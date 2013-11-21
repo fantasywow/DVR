@@ -28,6 +28,7 @@ private:
 public:
 	HANDLE *m_channelHandle;
 	BlmEncodeSetting m_encodeSetting[BLM_CHANNEL_MAX];
+	BOOL m_recodePlan[BLM_CHANNEL_MAX][7][24];
 	CString m_capturePath;
 	CString m_channelName[BLM_CHANNEL_MAX];
 	int m_osdName[BLM_CHANNEL_MAX];

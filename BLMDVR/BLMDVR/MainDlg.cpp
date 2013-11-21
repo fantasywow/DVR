@@ -8,6 +8,19 @@
 #include "MainDlg.h"
 #include "PreviewDlg.h"
 
+
+int StreamDirectReadCallback(ULONG channelNumber, void * DataBuf,DWORD Length, int FrameType, void *context)
+{
+	CMainDlg * mainDlg;
+
+	mainDlg = (CMainDlg *)context;
+	mainDlg->SaveStreamData(channelNumber, DataBuf, Length, FrameType);
+
+	return 0;
+}
+
+
+
 BOOL CMainDlg::PreTranslateMessage(MSG* pMsg)
 {
 	return CWindow::IsDialogMessage(pMsg);
@@ -49,7 +62,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	SetTimer(1,1000);
 	SetWindowPos(NULL,0,0,1000,700,SWP_SHOWWINDOW);
 	CenterWindow();
-	
+
+	RegisterStreamDirectReadCallback(StreamDirectReadCallback, this);
+
 	return TRUE;
 }
 
@@ -203,6 +218,12 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	GetLocalTime(&st);
 	time.Format(L"%d.%d.%d   %d:%02d:%02d",st.wYear,st.wMonth,st.wDay,st.wHour,st.wMinute,st.wSecond);
 	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
+
+	if (st.wMinute==0&&st.wSecond==0)
+	{
+		CheckRecordPlan(st.wDayOfWeek,st.wHour);
+	}
+
 	return 0;
 }
 
@@ -378,4 +399,94 @@ LRESULT CMainDlg::OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/
 	
 	} 
 	return 0;
+}
+
+
+
+void CMainDlg::SaveStreamData(int iChannel, void * pData, int iNum, int iFrameType)
+{
+	int iCH = iChannel;
+
+	if (iChannel < 0 || iChannel >= BLM_CHANNEL_MAX)
+	{
+		return;
+	}
+
+	else if (iFrameType & PktSubSysHeader || iFrameType & PktSubIFrames || iFrameType & PktSubPFrames || iFrameType & PktSubAudioFrames) 
+	{
+		iCH += BLM_CHANNEL_MAX;
+	}
+
+	WriteFile(m_fileHandle[iCH], pData, iNum,NULL,NULL);
+
+}
+
+
+void CMainDlg::StartCaptureVideo(int iChannel,bool sub)
+{
+	SYSTEMTIME systemTime;
+	GetLocalTime(&systemTime);
+	SetupDateTime(m_channelHandle[iChannel], &systemTime);
+
+	CString fileName;
+	fileName.Format(L"%dY%dM%dD%dH%d",systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
+	m_fileHandle[iChannel] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (sub) 
+	{
+		fileName.Format(L"%dY%dM%dD%dH%dSub",systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
+		m_fileHandle[iChannel+BLM_CHANNEL_MAX] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		SetupSubChannel(m_channelHandle[iChannel], 1);
+		CaptureIFrame(m_channelHandle[iChannel]);
+		StartSubVideoCapture(m_channelHandle[iChannel]);
+	}
+
+	SetupSubChannel(m_channelHandle[iChannel], 0);
+	CaptureIFrame(m_channelHandle[iChannel]);
+	int iRet = StartVideoCapture(m_channelHandle[iChannel]);
+
+	if (iRet != SS_SUCCESS)
+	{
+		MessageBox(L"Â¼ÖÆÊ§°Ü");
+	}
+	else
+	{
+		m_isVideoCapture[iChannel] = TRUE;
+	}
+}
+
+void CMainDlg::StopCaptureVideo(int iChannel,bool sub)
+{
+	StopVideoCapture(m_channelHandle[iChannel]);
+	if (sub) 
+	{
+		StopSubVideoCapture(m_channelHandle[iChannel]);
+	}
+	CloseHandle(m_fileHandle[iChannel]);
+	if(sub)
+	{
+		CloseHandle(m_fileHandle[iChannel+BLM_CHANNEL_MAX]);
+	}
+
+	m_isVideoCapture[iChannel] = FALSE;
+
+}
+
+void CMainDlg::CheckRecordPlan( int dayofWeek,int hour )
+{
+	for (int i=0;i<BLM_CHANNEL_MAX;i++)
+	{
+		if (m_channelHandle[i]!=INVALID_HANDLE_VALUE)
+		{
+			if (m_settingDlg->m_recodePlan[i][dayofWeek][hour]==TRUE&&m_isVideoCapture[i]==FALSE)
+			{
+				StartCaptureVideo(i,m_settingDlg->m_encodeSetting[i].sub);
+			}
+			if (m_settingDlg->m_recodePlan[i][dayofWeek][hour]==FALSE&&m_isVideoCapture[i]==TRUE)
+			{
+				StopCaptureVideo(i,m_settingDlg->m_encodeSetting[i].sub);
+			}
+		}
+	}
 }

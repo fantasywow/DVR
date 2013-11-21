@@ -37,6 +37,8 @@ private:
 	int m_focusChannel;
 	void SetPreviewDlgLayout(PreviewLayout layout,int channelID);
 	void FocusChannel(int channelID);
+	HANDLE m_fileHandle[BLM_CHANNEL_MAX*2];
+	BOOL m_isVideoCapture[BLM_CHANNEL_MAX];
 public:
 	char psText[MAX_PATH*2];
 	enum { IDD = IDD_MAINDLG };
@@ -85,4 +87,8 @@ public:
 	void initPreviewDlg();
 	void initValue();
 	LRESULT OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	void SaveStreamData(int iChannel, void * pData, int iNum, int iFrameType);
+	void StartCaptureVideo(int iChannel,bool sub);
+	void StopCaptureVideo(int iChannel,bool sub);
+	void CheckRecordPlan(int dayofWeek,int hour);
 };

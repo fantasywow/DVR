@@ -13,6 +13,8 @@
 #define IDD_RECORD_SETTING              209
 #define IDD_DIALOG_PLAY                 210
 #define IDD_DIALOG_PLAYWINDOW           211
+#define IDD_BLMCALDLG					300
+#define IDD_BLMCALRESDLG				301
 #define IDC_CAPTURE_PICTURE             1000
 #define IDC_SATURATION_SLIDER           1003
 #define IDC_CONTRAST_SLIDER             1004

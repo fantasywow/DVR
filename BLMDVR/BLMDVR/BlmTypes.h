@@ -25,7 +25,3 @@ typedef struct _encodeSetting{
 		maxBit_sub=0;
 	}
 }BlmEncodeSetting;
-
-typedef struct _userSetting{
-	BlmEncodeSetting m_encodeSetting;
-}BlmUserSetting;
