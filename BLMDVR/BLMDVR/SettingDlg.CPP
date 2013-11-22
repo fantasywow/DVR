@@ -103,12 +103,14 @@ LRESULT CSettingDlg::OnBnClickedConfirm(WORD /*wNotifyCode*/, WORD wID, HWND /*h
 	m_pictureDlg->SendMessage(BM_CONFIRM_SETTING);
 	m_recodeDlg->SendMessage(BM_CONFIRM_SETTING);
 	m_cradleDlg->SendMessage(BM_CONFIRM_SETTING);
+	m_recodeDlg->clearPlanCheck();
 	EndDialog(wID);
 	return 0;
 }
 
 LRESULT CSettingDlg::OnBnClickedCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
+	m_recodeDlg->clearPlanCheck();
 	EndDialog(wID);
 	return 0;
 }
@@ -144,6 +146,7 @@ LRESULT CSettingDlg::OnDestroy( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 LRESULT CSettingDlg::OnClose( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
+	m_recodeDlg->clearPlanCheck();
 	EndDialog(0);
 	return TRUE;
 }

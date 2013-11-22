@@ -367,37 +367,24 @@ void CMainDlg::initValue()
 
 LRESULT CMainDlg::OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	TCHAR szPathName[MAX_PATH];  
-	OPENFILENAME ofn = { OPENFILENAME_SIZE_VERSION_400 };//or  {sizeof (OPENFILENAME)}  
-	// lStructSize  
-	// 指定这个结构的大小，以字节为单位。  
-	// Windows 95/98和Windows NT 4.0：特意为Windows 95/98或Windows NT 4.0，及带有WINVER和_WIN32_WINNT >= 0x0500编译时，  
-	//  为这个成员使用OPENFILENAME_SIZE_VERSION_400。  
-	// Windows 2000及更高版本：这个参数使用sizeof (OPENFILENAME) 。  
-	ofn.hwndOwner =GetForegroundWindow();// 打开OR保存文件对话框的父窗口  
-	//ofn.lpstrFilter = TEXT("All\0*.*\0Text\0*.TXT\0");   
-	ofn.lpstrFilter = TEXT("264\0*.264\0");   
-	//过滤器 如果为 NULL 不使用过滤器  
-	//具体用法看上面  注意 /0  
-	lstrcpy(szPathName, TEXT(""));  
-	ofn.lpstrFile = szPathName;  
-	ofn.nMaxFile = sizeof(szPathName);//存放用户选择文件的 路径及文件名 缓冲区  
-	ofn.lpstrTitle = TEXT("选择文件");//选择文件对话框标题  
-	//TCHAR szCurDir[MAX_PATH];  
-	//GetCurrentDirectory(sizeof(szCurDir),szCurDir);  
-	//ofn.lpstrInitialDir=szCurDir;//设置对话框显示的初始目录  
-	ofn.lpstrInitialDir=m_settingDlg->m_capturePath;//
-	//ofn.Flags = OFN_EXPLORER |OFN_ALLOWMULTISELECT| OFN_FILEMUSTEXIST;//如果需要选择多个文件 则必须带有  OFN_ALLOWMULTISELECT标志  
-	//_tprintf(TEXT("select file/n"));  
-	BOOL bOk = GetOpenFileName(&ofn);//调用对话框打开文件  
-	if (bOk)  
-	{  
-		WideCharToMultiByte (CP_OEMCP,NULL,szPathName,-1,psText,MAX_PATH*2,NULL,FALSE);		
-		m_playDlg = new CPlayDlg(psText);
-		m_playDlg->Create(NULL);
-		m_playDlg->ShowWindow(TRUE);
-	
-	} 
+// 	TCHAR szPathName[MAX_PATH];  
+// 	OPENFILENAME ofn = { OPENFILENAME_SIZE_VERSION_400 };//or  {sizeof (OPENFILENAME)}  
+// 	ofn.hwndOwner =GetForegroundWindow();// 打开OR保存文件对话框的父窗口  
+// 	ofn.lpstrFilter = TEXT("264\0*.264\0");   
+// 	lstrcpy(szPathName, TEXT(""));  
+// 	ofn.lpstrFile = szPathName;  
+// 	ofn.nMaxFile = sizeof(szPathName);//存放用户选择文件的 路径及文件名 缓冲区  
+// 	ofn.lpstrTitle = TEXT("选择文件");//选择文件对话框标题  
+// 	ofn.lpstrInitialDir=m_settingDlg->m_capturePath;//
+// 	BOOL bOk = GetOpenFileName(&ofn);//调用对话框打开文件  
+// 	if (bOk)  
+// 	{  
+// 		WideCharToMultiByte (CP_OEMCP,NULL,szPathName,-1,psText,MAX_PATH*2,NULL,FALSE);		
+	m_playDlg = new CPlayDlg();
+	m_playDlg->Create(NULL);
+	m_playDlg->ShowWindow(TRUE);
+// 	
+// 	} 
 	return 0;
 }
 
@@ -429,12 +416,12 @@ void CMainDlg::StartCaptureVideo(int iChannel,bool sub)
 	SetupDateTime(m_channelHandle[iChannel], &systemTime);
 
 	CString fileName;
-	fileName.Format(L"%dY%dM%dD%dH%d",systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
+	fileName.Format(L"%s%dY%dM%dD%dH%d",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
 	m_fileHandle[iChannel] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (sub) 
 	{
-		fileName.Format(L"%dY%dM%dD%dH%dSub",systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
+		fileName.Format(L"%s%dY%dM%dD%dH%dSub",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
 		m_fileHandle[iChannel+BLM_CHANNEL_MAX] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 		SetupSubChannel(m_channelHandle[iChannel], 1);

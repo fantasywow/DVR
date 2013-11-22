@@ -267,14 +267,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BlmCalDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BlmDateTimeCtrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BlmMessage.h"
 				>
 			</File>

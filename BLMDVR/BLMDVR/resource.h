@@ -13,8 +13,8 @@
 #define IDD_RECORD_SETTING              209
 #define IDD_DIALOG_PLAY                 210
 #define IDD_DIALOG_PLAYWINDOW           211
-#define IDD_BLMCALDLG					300
-#define IDD_BLMCALRESDLG				301
+#define IDD_BLMCALDLG                   300
+#define IDD_BLMCALRESDLG                301
 #define IDC_CAPTURE_PICTURE             1000
 #define IDC_SATURATION_SLIDER           1003
 #define IDC_CONTRAST_SLIDER             1004
@@ -65,6 +65,8 @@
 #define IDC_STATIC_PLAYEDTIME           1055
 #define IDC_BUTTON1                     1057
 #define IDC_BUTTON_PAUSE                1057
+#define IDC_MONTHCALENDAR1              1058
+#define IDC_MONTHCALENDAR               1058
 #define IDC_LAYOUTBUTTON1               1077
 #define IDC_LAYOUTBUTTON4               1078
 #define IDC_LAYOUTBUTTON8               1079
@@ -76,7 +78,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1058
+#define _APS_NEXT_CONTROL_VALUE         1059
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

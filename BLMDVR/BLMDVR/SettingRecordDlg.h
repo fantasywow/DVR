@@ -16,6 +16,12 @@ class CRecordSettingDlg : public CDialogImpl<CRecordSettingDlg> ,
 
 private:
 	CSettingDlg *m_parent;
+	CListViewCtrl m_channelList;
+	int m_channelIndex[BLM_CHANNEL_MAX];
+	BOOL m_localRecodePlan[BLM_CHANNEL_MAX][7][24];
+	CButton m_checkButton[7][24];
+	int m_selectedChannel;
+
 public:
 	CRecordSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_RECORD_SETTING };
@@ -28,6 +34,7 @@ public:
 		return FALSE;
 	}
 
+
 	BEGIN_UPDATE_UI_MAP(CRecordSettingDlg)
 	END_UPDATE_UI_MAP()
 
@@ -35,6 +42,7 @@ public:
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		MESSAGE_HANDLER(BM_CONFIRM_SETTING, OnConfirm)
+		NOTIFY_HANDLER(IDC_CHANNEL_LIST, LVN_ITEMCHANGED, OnLvnItemchangedChannelList)
 	END_MSG_MAP()
 
 
@@ -49,4 +57,9 @@ public:
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
+	void initPlanCheck();
+	void updatePlanCheckValue();
+	void savePlanCheckValue();
+	void clearPlanCheck();
 };

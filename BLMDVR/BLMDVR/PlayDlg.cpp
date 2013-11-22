@@ -1,13 +1,12 @@
 #include "stdafx.h"
 #include "PlayDlg.h"
 #include "dhplay.h"
-#include "BlmDateTimeCtrl.h"
 
 
 
 LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
-	SetWindowPos(NULL,0,0,600,400,SWP_SHOWWINDOW);
+	SetWindowPos(NULL,0,0,800,600,SWP_SHOWWINDOW);
 	CenterWindow();
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
@@ -15,31 +14,28 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
 
-	RECT rect = {124, 0, 124+352, 288};
+	RECT rect = {224, 0, 224+352, 288};
 	m_playWindow.Create(m_hWnd, rect ,NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);		
 	m_timeSlide.Attach(GetDlgItem(IDC_SLIDER_TIME));
 	m_timeSlide.SetRange(0,99,TRUE);
 	GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"暂停");
 
-	PLAY_GetFreePort(&m_port);
-	PLAY_OpenFile(m_port,m_filePath);
+// 	PLAY_GetFreePort(&m_port);
+// 	//PLAY_OpenFile(m_port,m_filePath);
+// 
+// 	m_totalTime= PLAY_GetFileTime(m_port);
+// 	CString totalTime;
+// 	totalTime.Format(L"%dH%dM%dS",m_totalTime/3600,m_totalTime%3600/60,m_totalTime%60);
+// 	SetTimer(1,100);
+// 	GetDlgItem(IDC_STATIC_TOTALTIME).SetWindowText(totalTime);
+// 	PLAY_Play(m_port,m_playWindow.m_hWnd);
+// 	m_isPlaying = TRUE;
 
-	m_totalTime= PLAY_GetFileTime(m_port);
-	CString totalTime;
-	totalTime.Format(L"%dH%dM%dS",m_totalTime/3600,m_totalTime%3600/60,m_totalTime%60);
-	SetTimer(1,100);
-	GetDlgItem(IDC_STATIC_TOTALTIME).SetWindowText(totalTime);
-	PLAY_Play(m_port,m_playWindow.m_hWnd);
-	m_isPlaying = TRUE;
-
-	CBlmDateTimeCtrl blmdatectrl;
-	blmdatectrl.InitBlmCalendar(_datetime_t::now(), "%Y-%m-%d %H:%M:%S" ); //第1个参数是默认显示的日期，第二个参数是显示的日期格式
-	blmdatectrl.Create(m_hWnd);
-	blmdatectrl.MoveWindow(0,0,300,300,TRUE);//参数需要补充
-	blmdatectrl.ShowWindow(SW_SHOW);
 	
-
-
+	m_calendarCtrl = GetDlgItem(IDC_MONTHCALENDAR);
+	initSelectButton();
+	SYSTEMTIME st;
+	GetLocalTime(&st);
 	return TRUE;
 }
 
@@ -81,7 +77,6 @@ LRESULT CPlayDlg::OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/,
 {
 	double temp = m_timeSlide.GetPos();
 	PLAY_SetPlayPos(m_port,temp/100);
-
 	return 0;
 }
 
@@ -101,4 +96,61 @@ LRESULT CPlayDlg::OnBnClickedButtonPause(WORD /*wNotifyCode*/, WORD /*wID*/, HWN
 	}
 	
 	return 0;
+}
+
+LRESULT CPlayDlg::OnMcnGetdaystateMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
+{
+	LPNMDAYSTATE pDayState = reinterpret_cast<LPNMDAYSTATE>(pNMHDR);
+	int iMax = pDayState->cDayState;
+
+	for(int i = 0; i < iMax; i++)
+	{
+		if (pDayState->stStart.wMonth == 9)
+		{
+			pDayState->prgDayState[i] = (MONTHDAYSTATE)0;
+			pDayState->prgDayState[i] |= 1 << 5;   // 4th day
+			pDayState->prgDayState[i] |= 1 << 18;   // 19th day
+			pDayState->prgDayState[i] |= 1 << 25;   // 25th day	}
+		}else{
+			pDayState->prgDayState[i] = (MONTHDAYSTATE)0;
+			pDayState->prgDayState[i] |= 1 << 3;   // 4th day
+			pDayState->prgDayState[i] |= 1 << 18;   // 19th day
+			pDayState->prgDayState[i] |= 1 << 25;   // 25th day	
+		}
+
+	}
+	return 0;
+}
+
+LRESULT CPlayDlg::OnMcnSelchangeMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
+{
+	LPNMSELCHANGE pSelChange = reinterpret_cast<LPNMSELCHANGE>(pNMHDR);
+	SYSTEMTIME st;
+	m_calendarCtrl.GetCurSel(&st);
+	updateSelectButton(st.wYear,st.wMonth,st.wDay);
+	return 0;
+}
+
+void CPlayDlg::initSelectButton()
+{
+	RECT rc ={250,400,250+20,400+20};
+	for (int i= 0;i<BLM_CHANNEL_MAX;i++)
+	{
+		for(int j=0;j<24;j++)
+		{
+			m_selectButton[i][j].Create(m_hWnd, rc, L"",WS_CHILD | WS_VISIBLE);
+			m_selectButton[i][j].SetWindowText(L"");
+			rc.left+=20;
+			rc.right+=20;
+		}
+		rc.left = 250;
+		rc.right= 250+20;
+		rc.bottom+=20;
+		rc.top+=20;
+	}
+}
+
+void CPlayDlg::updateSelectButton( int year,int month,int day )
+{
+	//todo
 }
