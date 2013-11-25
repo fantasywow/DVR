@@ -41,6 +41,7 @@ private:
 	CMonthCalendarCtrl m_calendarCtrl;
 	CButton m_selectButton[BLM_CHANNEL_MAX][24];
 	int m_currentCalendarMonth;
+	BOOL m_recordAvailable[BLM_CHANNEL_MAX][24];
 public:
 	enum { IDD = IDD_DIALOG_PLAY };
 
@@ -78,5 +79,5 @@ public:
 	LRESULT OnMcnGetdaystateMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 	LRESULT OnMcnSelchangeMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 	void initSelectButton();
-	void updateSelectButton(int year,int month,int day);
+	void updateSelectButton();
 };

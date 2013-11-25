@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PlayDlg.h"
 #include "dhplay.h"
-
+#include "RecordManager.h"
 
 
 LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
@@ -30,7 +30,6 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 // 	GetDlgItem(IDC_STATIC_TOTALTIME).SetWindowText(totalTime);
 // 	PLAY_Play(m_port,m_playWindow.m_hWnd);
 // 	m_isPlaying = TRUE;
-
 	
 	m_calendarCtrl = GetDlgItem(IDC_MONTHCALENDAR);
 	initSelectButton();
@@ -105,19 +104,7 @@ LRESULT CPlayDlg::OnMcnGetdaystateMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, 
 
 	for(int i = 0; i < iMax; i++)
 	{
-		if (pDayState->stStart.wMonth == 9)
-		{
-			pDayState->prgDayState[i] = (MONTHDAYSTATE)0;
-			pDayState->prgDayState[i] |= 1 << 5;   // 4th day
-			pDayState->prgDayState[i] |= 1 << 18;   // 19th day
-			pDayState->prgDayState[i] |= 1 << 25;   // 25th day	}
-		}else{
-			pDayState->prgDayState[i] = (MONTHDAYSTATE)0;
-			pDayState->prgDayState[i] |= 1 << 3;   // 4th day
-			pDayState->prgDayState[i] |= 1 << 18;   // 19th day
-			pDayState->prgDayState[i] |= 1 << 25;   // 25th day	
-		}
-
+		LookUpbyMonth(pDayState->stStart,pDayState->prgDayState);
 	}
 	return 0;
 }
@@ -127,7 +114,8 @@ LRESULT CPlayDlg::OnMcnSelchangeMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BO
 	LPNMSELCHANGE pSelChange = reinterpret_cast<LPNMSELCHANGE>(pNMHDR);
 	SYSTEMTIME st;
 	m_calendarCtrl.GetCurSel(&st);
-	updateSelectButton(st.wYear,st.wMonth,st.wDay);
+	LookUpbyDay(st,&m_recordAvailable[0][0]);
+	updateSelectButton();
 	return 0;
 }
 
@@ -148,9 +136,17 @@ void CPlayDlg::initSelectButton()
 		rc.bottom+=20;
 		rc.top+=20;
 	}
+
+	updateSelectButton();
 }
 
-void CPlayDlg::updateSelectButton( int year,int month,int day )
+void CPlayDlg::updateSelectButton()
 {
-	//todo
+	for (int i = 0;i<BLM_CHANNEL_MAX;i++)
+	{
+		for(int j=0;j<24;j++)
+		{
+			m_selectButton[i][j].EnableWindow(m_recordAvailable[i][j]);
+		}
+	}
 }

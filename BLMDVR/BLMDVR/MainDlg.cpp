@@ -7,7 +7,7 @@
 #include "dhplay.h"
 #include "MainDlg.h"
 #include "PreviewDlg.h"
-
+#include "RecordManager.h"
 
 int StreamDirectReadCallback(ULONG channelNumber, void * DataBuf,DWORD Length, int FrameType, void *context)
 {
@@ -47,7 +47,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
-	
+	InitRecordXMLfile();
 	initDH();
 	initPreviewDlg();
 	initBottomButton();
@@ -418,11 +418,12 @@ void CMainDlg::StartCaptureVideo(int iChannel,bool sub)
 	CString fileName;
 	fileName.Format(L"%s%dY%dM%dD%dH%d",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
 	m_fileHandle[iChannel] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
+	InsertOneRecord(systemTime,fileName);
 	if (sub) 
 	{
 		fileName.Format(L"%s%dY%dM%dD%dH%dSub",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
 		m_fileHandle[iChannel+BLM_CHANNEL_MAX] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		InsertOneRecord(systemTime,fileName);
 
 		SetupSubChannel(m_channelHandle[iChannel], 1);
 		CaptureIFrame(m_channelHandle[iChannel]);

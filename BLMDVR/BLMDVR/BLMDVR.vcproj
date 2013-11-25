@@ -210,6 +210,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RecordManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SettingBasicDlg.cpp"
 				>
 			</File>
@@ -299,6 +303,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RecordManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -341,6 +349,18 @@
 			</File>
 			<File
 				RelativePath=".\BLMDVR.rc"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="TinyXML"
+			>
+			<File
+				RelativePath=".\tinyxml2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\tinyxml2.h"
 				>
 			</File>
 		</Filter>
