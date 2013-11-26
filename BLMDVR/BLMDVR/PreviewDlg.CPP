@@ -9,7 +9,7 @@ LRESULT CPreiviewDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
 	UIAddChildWindowContainer(m_hWnd);
 	m_channelID=(int)lParam;
 	CString temp;
-	temp.Format(L"%d",m_channelID);
+	temp.Format("%d",m_channelID);
 	GetDlgItem(IDC_CHANNEL_ID).SetWindowText(temp);
 	GetDlgItem(IDC_CHANNEL_ID).SetWindowPos(NULL,10,0,20,20,SWP_SHOWWINDOW);
 	return true;
@@ -53,7 +53,7 @@ LRESULT CPreiviewDlg::OnPreviewFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*
 LRESULT CPreiviewDlg::OnPreviewUnFocus( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	CString test;
-	test.Format(L"unfocus:%d",m_channelID);
+	test.Format("unfocus:%d",m_channelID);
 	ATLTRACE(test);
 	unfocus();
 	return true;

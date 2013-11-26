@@ -15,10 +15,10 @@ LRESULT CBasicSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 	m_diskList = GetDlgItem(IDC_LIST_DISK);
 	m_diskList.SetWindowLong(GWL_STYLE, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE );
 	m_diskList.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_FLATSB);
-	m_diskList.AddColumn(L"硬盘盘符", 0);
-	m_diskList.AddColumn(L"硬盘大小", 1);
-	m_diskList.AddColumn(L"剩余空间", 2);
-	m_diskList.AddColumn(L"空间占用率", 3);
+	m_diskList.AddColumn("硬盘盘符", 0);
+	m_diskList.AddColumn("硬盘大小", 1);
+	m_diskList.AddColumn("剩余空间", 2);
+	m_diskList.AddColumn("空间占用率", 3);
 	TCHAR szBuf[100];
 	memset(szBuf,0,100);
 	DWORD len = GetLogicalDriveStrings(sizeof(szBuf)/sizeof(TCHAR),szBuf);
@@ -38,13 +38,13 @@ LRESULT CBasicSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 				))
 			{
 				CString temp1,temp2,temp3;
-				CString temp4 = L"%";
+				CString temp4 = "%";
 				long long free,total;
 				total = nTotalNumberOfBytes.QuadPart/(1024*1024);
 				free= nFreeBytesAvailable.QuadPart/(1024*1024);
-				temp1.Format(L"%dM",free);
-				temp2.Format(L"%dM",total);
-				temp3.Format(L"%d",100-free*100/total);
+				temp1.Format("%dM",free);
+				temp2.Format("%dM",total);
+				temp3.Format("%d",100-free*100/total);
 				m_diskList.AddItem(i,0,sDrivePath);
 				m_diskList.AddItem(i,1,temp1);
 				m_diskList.AddItem(i,2,temp2);

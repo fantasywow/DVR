@@ -7,11 +7,11 @@ CSettingDlg::CSettingDlg( HANDLE * phChannel )
 	m_channelHandle = phChannel;
 	for (int i=0;i<BLM_CHANNEL_MAX;i++)
 	{
-		m_channelName[i].Format(L"Camera%d",i);
+		m_channelName[i].Format("Camera%d",i);
 		m_osdName[i]=true;
 		m_osdTime[i]=true;
 	}
-	m_capturePath = L"C:\\";
+	m_capturePath = "C:\\";
 	m_encodeDlg = new CEncodeSettingDlg(this);
 	m_pictureDlg= new CPictureSettingDlg(this);
 	m_basicDlg  = new CBasicSettingDlg(this);
@@ -129,7 +129,7 @@ void CSettingDlg::OSD( int channelId,bool Name,bool Time )
 		int iRet = SetOsd(m_channelHandle[channelId], TRUE);
 		if (iRet != SS_SUCCESS)
 		{
-			MessageBox(L"OSD FAILED");
+			MessageBox("OSD FAILED");
 		}
 	}
 }

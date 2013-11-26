@@ -21,7 +21,7 @@
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -353,14 +353,30 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="TinyXML"
+			Name="SQLITE"
 			>
 			<File
-				RelativePath=".\tinyxml2.cpp"
+				RelativePath=".\CppSQLite3.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\tinyxml2.h"
+				RelativePath=".\CppSQLite3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sqlite3.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\sqlite3.h"
 				>
 			</File>
 		</Filter>

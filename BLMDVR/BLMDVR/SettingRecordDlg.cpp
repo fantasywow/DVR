@@ -16,14 +16,14 @@ LRESULT CRecordSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	m_channelList = GetDlgItem(IDC_CHANNEL_LIST);
 	m_channelList.SetWindowLong(GWL_STYLE, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE );
 	m_channelList.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_FLATSB);
-	m_channelList.AddColumn(L"序号", 0);
-	m_channelList.AddColumn(L"通道名称", 1);
+	m_channelList.AddColumn("序号", 0);
+	m_channelList.AddColumn("通道名称", 1);
 	for (int i=0,j=0;i<BLM_CHANNEL_MAX;i++)
 	{
 		//if (m_parent->m_channelHandle[i]!=INVALID_HANDLE_VALUE)
 		//{
 		CString channelID;
-		channelID.Format(L"%d",i);
+		channelID.Format("%d",i);
 		m_channelList.AddItem(j,0,channelID);
 		m_channelList.AddItem(j,1,m_parent->m_channelName[i]);
 		m_channelIndex[j]=i;
@@ -68,7 +68,7 @@ void CRecordSettingDlg::initPlanCheck()
 		for(int j=0;j<24;j++)
 		{
 			m_checkButton[i][j].Create(m_hWnd, rc, _T("Checkbox"),WS_CHILD | WS_VISIBLE|BS_AUTOCHECKBOX);
-			m_checkButton[i][j].SetWindowText(L"");
+			m_checkButton[i][j].SetWindowText("");
 			rc.left+=20;
 			rc.right+=20;
 		}

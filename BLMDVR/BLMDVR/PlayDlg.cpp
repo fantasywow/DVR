@@ -18,7 +18,7 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_playWindow.Create(m_hWnd, rect ,NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);		
 	m_timeSlide.Attach(GetDlgItem(IDC_SLIDER_TIME));
 	m_timeSlide.SetRange(0,99,TRUE);
-	GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"ÔÝÍ£");
+	GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText("ÔÝÍ£");
 
 // 	PLAY_GetFreePort(&m_port);
 // 	//PLAY_OpenFile(m_port,m_filePath);
@@ -66,7 +66,7 @@ LRESULT CPlayDlg::OnTimer( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 	m_timeSlide.SetPos(PLAY_GetPlayPos(m_port)*100);
 
 	CString palyedTime;
-	palyedTime.Format(L"%dH%dM%dS",m_playedTime/3600,m_playedTime%3600/60,second);
+	palyedTime.Format("%dH%dM%dS",m_playedTime/3600,m_playedTime%3600/60,second);
 	GetDlgItem(IDC_STATIC_PLAYEDTIME).SetWindowText(palyedTime);
 
 	return TRUE;
@@ -85,13 +85,13 @@ LRESULT CPlayDlg::OnBnClickedButtonPause(WORD /*wNotifyCode*/, WORD /*wID*/, HWN
 	{
 		PLAY_Pause(m_port,TRUE);
 		m_isPlaying = FALSE;
-		GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"²¥·Å");
+		GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText("²¥·Å");
 	} 
 	else
 	{
 		PLAY_Pause(m_port,FALSE);
 		m_isPlaying = TRUE;
-		GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText(L"ÔÝÍ£");
+		GetDlgItem(IDC_BUTTON_PAUSE).SetWindowText("ÔÝÍ£");
 	}
 	
 	return 0;
@@ -114,7 +114,8 @@ LRESULT CPlayDlg::OnMcnSelchangeMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BO
 	LPNMSELCHANGE pSelChange = reinterpret_cast<LPNMSELCHANGE>(pNMHDR);
 	SYSTEMTIME st;
 	m_calendarCtrl.GetCurSel(&st);
-	LookUpbyDay(st,&m_recordAvailable[0][0]);
+
+	LookUpbyDay(st,m_oneDayRecord);
 	updateSelectButton();
 	return 0;
 }
@@ -126,8 +127,8 @@ void CPlayDlg::initSelectButton()
 	{
 		for(int j=0;j<24;j++)
 		{
-			m_selectButton[i][j].Create(m_hWnd, rc, L"",WS_CHILD | WS_VISIBLE);
-			m_selectButton[i][j].SetWindowText(L"");
+			m_selectButton[i][j].Create(m_hWnd, rc, "",WS_CHILD | WS_VISIBLE);
+			m_selectButton[i][j].SetWindowText("");
 			rc.left+=20;
 			rc.right+=20;
 		}

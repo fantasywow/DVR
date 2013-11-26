@@ -47,7 +47,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
-	InitRecordXMLfile();
+	InitRecordIndex();
 	initDH();
 	initPreviewDlg();
 	initBottomButton();
@@ -80,21 +80,21 @@ LRESULT CMainDlg::OnCapturePicture(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
 	if(iRet != 0)
 	{
 		delete pJpegBuf;
-		MessageBox(L"fail to capture a Jpeg image!");
+		MessageBox("fail to capture a Jpeg image!");
 		return FALSE;
 	}
-	HANDLE hJpgFile = CreateFile(L"test.jpeg", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE hJpgFile = CreateFile("test.jpeg", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(hJpgFile == INVALID_HANDLE_VALUE)
 	{
 		delete pJpegBuf;
-		MessageBox(L"fail to capture a Jpeg image!");
+		MessageBox("fail to capture a Jpeg image!");
 		return FALSE;          
 	}
 	if(!WriteFile(hJpgFile, pJpegBuf, dwSize, NULL, NULL))
 	{
 		delete pJpegBuf;
 		CloseHandle(hJpgFile);
-		MessageBox(L"fail to capture a Jpeg image!");
+		MessageBox("fail to capture a Jpeg image!");
 		return FALSE;          
 	}
 	delete pJpegBuf;
@@ -216,7 +216,7 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	SYSTEMTIME st;
 	CString time;
 	GetLocalTime(&st);
-	time.Format(L"%d.%d.%d   %d:%02d:%02d",st.wYear,st.wMonth,st.wDay,st.wHour,st.wMinute,st.wSecond);
+	time.Format("%d.%d.%d   %d:%02d:%02d",st.wYear,st.wMonth,st.wDay,st.wHour,st.wMinute,st.wSecond);
 	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
 
 	if (st.wMinute==0&&st.wSecond==0)
@@ -243,9 +243,6 @@ LRESULT CMainDlg::OnPreviewFocus( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 	{
 		m_previewDlg[m_focusChannel].SendMessage(BM_PREVIEW_UNFOCUS,0,0);
 		FocusChannel((int)lParam);
-		CString test;
-		test.Format(L"focus:%d",m_focusChannel);
-		ATLTRACE(test);
 	}
 	
 	return true;
@@ -284,25 +281,25 @@ void CMainDlg::updateSetting()
 void CMainDlg::initSlide()
 {
 	m_hueTitle.Attach(GetDlgItem(IDC_STATIC_HUE));
-	m_hueTitle.SetWindowText(L"色相");
+	m_hueTitle.SetWindowText("色相");
 	m_hueTitle.SetWindowPos(NULL,730,130,50,20,SWP_SHOWWINDOW);
 	m_hueSlide.Attach(GetDlgItem(IDC_HUE_SLIDER));
 	m_hueSlide.SetWindowPos(NULL,730,150,200,30,SWP_SHOWWINDOW);
 	m_hueSlide.SetRange(0,255,TRUE);
 	m_saturationTitle.Attach(GetDlgItem(IDC_STATIC_SATURATION));
-	m_saturationTitle.SetWindowText(L"饱和度");
+	m_saturationTitle.SetWindowText("饱和度");
 	m_saturationTitle.SetWindowPos(NULL,730,180,50,20,SWP_SHOWWINDOW);
 	m_saturationSlide.Attach(GetDlgItem(IDC_SATURATION_SLIDER));
 	m_saturationSlide.SetWindowPos(NULL,730,200,200,30,SWP_SHOWWINDOW);
 	m_saturationSlide.SetRange(0,255,TRUE);
 	m_brightnessTitle.Attach(GetDlgItem(IDC_STATIC_BRGHTNESS));
-	m_brightnessTitle.SetWindowText(L"亮度");
+	m_brightnessTitle.SetWindowText("亮度");
 	m_brightnessTitle.SetWindowPos(NULL,730,230,50,20,SWP_SHOWWINDOW);
 	m_brightnessSlide.Attach(GetDlgItem(IDC_BRGHTNESS_SLIDER));
 	m_brightnessSlide.SetWindowPos(NULL,730,250,200,30,SWP_SHOWWINDOW);
 	m_brightnessSlide.SetRange(0,255,TRUE);
 	m_contrastTitle.Attach(GetDlgItem(IDC_STATIC_CONTRAST));
-	m_contrastTitle.SetWindowText(L"对比度");
+	m_contrastTitle.SetWindowText("对比度");
 	m_contrastTitle.SetWindowPos(NULL,730,280,50,20,SWP_SHOWWINDOW);
 	m_contrastSlide.Attach(GetDlgItem(IDC_CONTRAST_SLIDER));
 	m_contrastSlide.SetWindowPos(NULL,730,300,200,30,SWP_SHOWWINDOW);
@@ -314,7 +311,7 @@ void CMainDlg::initTimeLabel()
 	GetDlgItem(IDC_TIME_LABEL).SetWindowPos(NULL,750,50,200,50,SWP_SHOWWINDOW);
 	CString time;
 	GetLocalTime(&m_systemTime);
-	time.Format(L"%d.%d.%d   %d:%02d:%02d",m_systemTime.wYear,m_systemTime.wMonth,m_systemTime.wDay,m_systemTime.wHour,m_systemTime.wMinute,m_systemTime.wSecond);
+	time.Format("%d.%d.%d   %d:%02d:%02d",m_systemTime.wYear,m_systemTime.wMonth,m_systemTime.wDay,m_systemTime.wHour,m_systemTime.wMinute,m_systemTime.wSecond);
 	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
 }
 
@@ -333,7 +330,7 @@ void CMainDlg::initDH()
 	iBoardNum = InitDSPs();
 	if (iBoardNum <= 0)
 	{
-		MessageBox(L"大华卡初始化失败!\n");
+		MessageBox("大华卡初始化失败!\n");
 		for (int i=0;i<8;i++)
 		{
 			m_channelHandle[i] = INVALID_HANDLE_VALUE;
@@ -367,24 +364,9 @@ void CMainDlg::initValue()
 
 LRESULT CMainDlg::OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-// 	TCHAR szPathName[MAX_PATH];  
-// 	OPENFILENAME ofn = { OPENFILENAME_SIZE_VERSION_400 };//or  {sizeof (OPENFILENAME)}  
-// 	ofn.hwndOwner =GetForegroundWindow();// 打开OR保存文件对话框的父窗口  
-// 	ofn.lpstrFilter = TEXT("264\0*.264\0");   
-// 	lstrcpy(szPathName, TEXT(""));  
-// 	ofn.lpstrFile = szPathName;  
-// 	ofn.nMaxFile = sizeof(szPathName);//存放用户选择文件的 路径及文件名 缓冲区  
-// 	ofn.lpstrTitle = TEXT("选择文件");//选择文件对话框标题  
-// 	ofn.lpstrInitialDir=m_settingDlg->m_capturePath;//
-// 	BOOL bOk = GetOpenFileName(&ofn);//调用对话框打开文件  
-// 	if (bOk)  
-// 	{  
-// 		WideCharToMultiByte (CP_OEMCP,NULL,szPathName,-1,psText,MAX_PATH*2,NULL,FALSE);		
 	m_playDlg = new CPlayDlg();
 	m_playDlg->Create(NULL);
 	m_playDlg->ShowWindow(TRUE);
-// 	
-// 	} 
 	return 0;
 }
 
@@ -415,15 +397,14 @@ void CMainDlg::StartCaptureVideo(int iChannel,bool sub)
 	GetLocalTime(&systemTime);
 	SetupDateTime(m_channelHandle[iChannel], &systemTime);
 
-	CString fileName;
-	fileName.Format(L"%s%dY%dM%dD%dH%d",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
-	m_fileHandle[iChannel] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	InsertOneRecord(systemTime,fileName);
+	m_recordFileName[iChannel].Format("%s%dY%dM%dD%dH%d",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
+	m_fileHandle[iChannel] = CreateFile(m_recordFileName[iChannel], GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	InsertOneRecord(iChannel,0,systemTime,m_recordFileName[iChannel]);
 	if (sub) 
 	{
-		fileName.Format(L"%s%dY%dM%dD%dH%dSub",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
-		m_fileHandle[iChannel+BLM_CHANNEL_MAX] = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		InsertOneRecord(systemTime,fileName);
+		m_recordFileName[iChannel+BLM_CHANNEL_MAX].Format("%s%dY%dM%dD%dH%dSub",m_settingDlg->m_capturePath,systemTime.wYear,systemTime.wMonth,systemTime.wDay,systemTime.wHour,iChannel);
+		m_fileHandle[iChannel+BLM_CHANNEL_MAX] = CreateFile(m_recordFileName[iChannel], GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		InsertOneRecord(iChannel,1,systemTime,m_recordFileName[iChannel]);
 
 		SetupSubChannel(m_channelHandle[iChannel], 1);
 		CaptureIFrame(m_channelHandle[iChannel]);
@@ -436,7 +417,7 @@ void CMainDlg::StartCaptureVideo(int iChannel,bool sub)
 
 	if (iRet != SS_SUCCESS)
 	{
-		MessageBox(L"录制失败");
+		MessageBox("录制失败");
 	}
 	else
 	{
@@ -451,9 +432,13 @@ void CMainDlg::StopCaptureVideo(int iChannel,bool sub)
 	{
 		StopSubVideoCapture(m_channelHandle[iChannel]);
 	}
+	SYSTEMTIME systemTime;
+	GetLocalTime(&systemTime);
+	updateEndTime(systemTime,m_recordFileName[iChannel]);
 	CloseHandle(m_fileHandle[iChannel]);
 	if(sub)
 	{
+		updateEndTime(systemTime,m_recordFileName[iChannel+BLM_CHANNEL_MAX]);
 		CloseHandle(m_fileHandle[iChannel+BLM_CHANNEL_MAX]);
 	}
 

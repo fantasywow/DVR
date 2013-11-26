@@ -32,6 +32,7 @@ private:
 	CTrackBarCtrl m_brightnessSlide,m_contrastSlide,m_saturationSlide,m_hueSlide;
 	CStatic m_brightnessTitle,m_contrastTitle,m_saturationTitle,m_hueTitle;
 	CSettingDlg*  m_settingDlg;
+	CString m_recordFileName[BLM_CHANNEL_MAX*2];
 	BOOL m_isFullScreen;
 	PreviewLayout m_lastLayout;
 	int m_focusChannel;

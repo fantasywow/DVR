@@ -25,3 +25,10 @@ typedef struct _encodeSetting{
 		maxBit_sub=0;
 	}
 }BlmEncodeSetting;
+
+typedef struct _record{
+	CString fileName;
+	int channel;
+	int beginTime;
+	int endTime;
+}BlmRecord;

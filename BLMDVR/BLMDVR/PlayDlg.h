@@ -5,6 +5,8 @@
 #include "BlmMessage.h"
 #include "BlmTypes.h"
 #include "dhvecsystem.h"
+#include <vector>
+using namespace std;
 
 class CPlayWindow : public CFrameWindowImpl<CPlayWindow>
 {
@@ -42,6 +44,7 @@ private:
 	CButton m_selectButton[BLM_CHANNEL_MAX][24];
 	int m_currentCalendarMonth;
 	BOOL m_recordAvailable[BLM_CHANNEL_MAX][24];
+	vector<BlmRecord> m_oneDayRecord;
 public:
 	enum { IDD = IDD_DIALOG_PLAY };
 
