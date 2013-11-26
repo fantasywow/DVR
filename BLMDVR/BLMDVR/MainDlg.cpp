@@ -34,7 +34,6 @@ BOOL CMainDlg::OnIdle()
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	
 
 	// set icons
 	HICON hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
@@ -47,6 +46,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
+
+
 	InitRecordIndex();
 	initDH();
 	initPreviewDlg();
@@ -317,7 +318,8 @@ void CMainDlg::initTimeLabel()
 
 void CMainDlg::initBottomButton()
 {
-	GetDlgItem(IDC_BUTTON_CHOOSEFILE).SetWindowPos(NULL,50,590,100,20,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_BUTTON_OPENPLAY).SetWindowPos(NULL,50,590,100,20,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_BUTTON_RECORD_ON).SetWindowPos(NULL,150,590,100,20,SWP_SHOWWINDOW);
 	GetDlgItem(IDC_LAYOUTBUTTON1).SetWindowPos(NULL,730,590,20,20,SWP_SHOWWINDOW);
 	GetDlgItem(IDC_LAYOUTBUTTON4).SetWindowPos(NULL,755,590,20,20,SWP_SHOWWINDOW);
 	GetDlgItem(IDC_LAYOUTBUTTON8).SetWindowPos(NULL,780,590,20,20,SWP_SHOWWINDOW);
@@ -358,6 +360,7 @@ void CMainDlg::initValue()
 {
 	m_isFullScreen = FALSE;
 	m_settingDlg = new CSettingDlg(m_channelHandle);
+	m_isRecordOn = true;
 }
 
 
@@ -462,4 +465,18 @@ void CMainDlg::CheckRecordPlan( int dayofWeek,int hour )
 			}
 		}
 	}
+}
+
+LRESULT CMainDlg::OnBnClickedButtonRecordOn(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	m_isRecordOn = !m_isRecordOn;
+	if (m_isRecordOn)
+	{
+		GetDlgItem(IDC_BUTTON_RECORD_ON).SetWindowText("On");
+	} 
+	else
+	{
+		GetDlgItem(IDC_BUTTON_RECORD_ON).SetWindowText("Off");
+	}
+	return 0;
 }

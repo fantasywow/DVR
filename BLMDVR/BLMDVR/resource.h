@@ -60,12 +60,13 @@
 #define IDC_STATIC_SATURATION           1048
 #define IDC_STATIC_BRGHTNESS            1049
 #define IDC_BUTTON_CHOOSEFILE           1050
+#define IDC_BUTTON_OPENPLAY             1050
 #define IDC_STATIC_TOTALTIME            1053
 #define IDC_SLIDER_TIME                 1054
 #define IDC_STATIC_PLAYEDTIME           1055
 #define IDC_BUTTON1                     1057
 #define IDC_BUTTON_PAUSE                1057
-#define IDC_MONTHCALENDAR1              1058
+#define IDC_BUTTON_RECORD_ON            1057
 #define IDC_MONTHCALENDAR               1058
 #define IDC_LAYOUTBUTTON1               1077
 #define IDC_LAYOUTBUTTON4               1078

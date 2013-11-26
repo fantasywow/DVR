@@ -40,6 +40,7 @@ private:
 	void FocusChannel(int channelID);
 	HANDLE m_fileHandle[BLM_CHANNEL_MAX*2];
 	BOOL m_isVideoCapture[BLM_CHANNEL_MAX];
+	BOOL m_isRecordOn;
 public:
 	char psText[MAX_PATH*2];
 	enum { IDD = IDD_MAINDLG };
@@ -63,7 +64,8 @@ public:
 		COMMAND_HANDLER(IDC_SETTINGBUTTON, BN_CLICKED, OnBnClickedSettingbutton)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
-		COMMAND_HANDLER(IDC_BUTTON_CHOOSEFILE, BN_CLICKED, OnBnClickedButtonChoosefile)
+		COMMAND_HANDLER(IDC_BUTTON_OPENPLAY, BN_CLICKED, OnBnClickedButtonChoosefile)
+		COMMAND_HANDLER(IDC_BUTTON_RECORD_ON, BN_CLICKED, OnBnClickedButtonRecordOn)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -92,4 +94,5 @@ public:
 	void StartCaptureVideo(int iChannel,bool sub);
 	void StopCaptureVideo(int iChannel,bool sub);
 	void CheckRecordPlan(int dayofWeek,int hour);
+	LRESULT OnBnClickedButtonRecordOn(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };
