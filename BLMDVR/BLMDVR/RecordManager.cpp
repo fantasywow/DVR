@@ -47,6 +47,7 @@ void LookUpbyDay( SYSTEMTIME st,vector<BlmRecord>& record)
 	ss<<1;
 	ss<<" and sub=";
 	ss<<0;
+	ss<<" order by begintime";
 	ss<<";";
 
 	CppSQLite3Query q = m_sqllitedb.execQuery(ss.str().c_str());
@@ -108,19 +109,27 @@ bool InitRecordIndex()
 	}
 
 
-	{ //for test
-		SYSTEMTIME  st;
-		GetLocalTime(&st);
-		CString test="test2";
-		//InsertOneRecord(0,0,st,test);
-		//updateEndTime(st,test);
-// 		MONTHDAYSTATE prgDayState;
-// 		LookUpbyMonth(st,&prgDayState);
-		vector<BlmRecord> temp;
-		missingOneRecord(test);
-		LookUpbyDay(st,temp);
-
-	}
+// 	{ //for test
+//  		SYSTEMTIME  st;
+//  		GetLocalTime(&st);
+//  		CString test;
+// 		for (int i =0;i<5;i++)
+// 		{
+// 			test.Format("testtest%d",i);
+// 			st.wMinute=0;
+// 			st.wHour++;
+// 			InsertOneRecord(0,0,st,test);
+// 			st.wMinute = 30;
+// 			updateEndTime(st,test);
+// 		}
+//  		InsertOneRecord(0,0,st,test);
+//  		updateEndTime(st,test);
+// // 		MONTHDAYSTATE prgDayState;
+// // 		LookUpbyMonth(st,&prgDayState);
+// 		vector<BlmRecord> temp;
+// 		missingOneRecord(test);
+// 		LookUpbyDay(st,temp);
+// 	}
 
 	return true;
 }

@@ -36,15 +36,15 @@ class CPlayDlg : public CDialogImpl<CPlayDlg> ,
 {
 private:
 	CPlayWindow m_playWindow;
-	LONG m_port;
 	CTrackBarCtrl m_timeSlide;
-	int m_playedTime,m_totalTime;
-	BOOL m_isPlaying;
 	CMonthCalendarCtrl m_calendarCtrl;
-	CButton m_selectButton[BLM_CHANNEL_MAX][24];
+	LONG m_port;
+	int m_playBeginTime,m_playEndTime;
 	int m_currentCalendarMonth;
-	BOOL m_recordAvailable[BLM_CHANNEL_MAX][24];
+	int m_recordIndex;
+	BOOL m_isPlaying;
 	vector<BlmRecord> m_oneDayRecord;
+	int m_channel;
 public:
 	enum { IDD = IDD_DIALOG_PLAY };
 
@@ -64,6 +64,7 @@ public:
 		//MESSAGE_HANDLER(WM_CLOSE,OnClose)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(BM_FILE_END, OnFileEnd)
 		COMMAND_ID_HANDLER(IDCANCEL, OnClose)
 		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
 		COMMAND_HANDLER(IDC_BUTTON_PAUSE, BN_CLICKED, OnBnClickedButtonPause)
@@ -81,6 +82,10 @@ public:
 	LRESULT OnBnClickedButtonPause(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnMcnGetdaystateMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 	LRESULT OnMcnSelchangeMonthcalendar(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
-	void initSelectButton();
-	void updateSelectButton();
+	LRESULT OnFileEnd(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	void showOneDayRecord();
+	void checkPos( int pos );
+	void calCurrentPos();
+	bool playFile(CString fileName,int beginTime,int endTime);
+	void closeFile();
 };
