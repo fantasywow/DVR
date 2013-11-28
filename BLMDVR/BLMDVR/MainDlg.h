@@ -31,7 +31,6 @@ private:
 	SYSTEMTIME m_systemTime;
 	CTrackBarCtrl m_brightnessSlide,m_contrastSlide,m_saturationSlide,m_hueSlide;
 	CStatic m_brightnessTitle,m_contrastTitle,m_saturationTitle,m_hueTitle;
-	CSettingDlg*  m_settingDlg;
 	CString m_recordFileName[BLM_CHANNEL_MAX*2];
 	BOOL m_isFullScreen;
 	PreviewLayout m_lastLayout;
@@ -39,9 +38,10 @@ private:
 	void SetPreviewDlgLayout(PreviewLayout layout,int channelID);
 	void FocusChannel(int channelID);
 	HANDLE m_fileHandle[BLM_CHANNEL_MAX*2];
-	BOOL m_isVideoCapture[BLM_CHANNEL_MAX];
+	BOOL m_isVideoCapture[BLM_CHANNEL_MAX*2];
 	BOOL m_isRecordOn;
 public:
+	CSettingDlg*  m_settingDlg;
 	char psText[MAX_PATH*2];
 	enum { IDD = IDD_MAINDLG };
 

@@ -21,6 +21,10 @@ void LookUpbyMonth(SYSTEMTIME st,LPMONTHDAYSTATE prgDayState)
 	ss<<begintime;
 	ss<<" and date<";
 	ss<<endtime;
+	ss<<" and exist=";
+	ss<<1;
+	ss<<" and sub=";
+	ss<<0;
 	ss<<";";
 
 	CppSQLite3Query q = m_sqllitedb.execQuery(ss.str().c_str());
@@ -59,7 +63,10 @@ void LookUpbyDay( SYSTEMTIME st,vector<BlmRecord>& record)
 		oneRecord.channel = q.getIntField(1);
 		oneRecord.beginTime = q.getIntField(2);
 		oneRecord.endTime = q.getIntField(3);
-		record.push_back(oneRecord);
+		if (oneRecord.endTime != 0)
+		{
+			record.push_back(oneRecord);
+		}
 		q.nextRow();
 	}
 	q.finalize();

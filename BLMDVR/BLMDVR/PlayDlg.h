@@ -8,6 +8,8 @@
 #include <vector>
 using namespace std;
 
+class CMainDlg;
+
 class CPlayWindow : public CFrameWindowImpl<CPlayWindow>
 {
 public:
@@ -37,6 +39,7 @@ class CPlayDlg : public CDialogImpl<CPlayDlg> ,
 private:
 	CPlayWindow m_playWindow;
 	CTrackBarCtrl m_timeSlide;
+	CListBox  m_channelList;
 	CMonthCalendarCtrl m_calendarCtrl;
 	LONG m_port;
 	int m_playBeginTime,m_playEndTime;
@@ -44,10 +47,13 @@ private:
 	int m_recordIndex;
 	BOOL m_isPlaying;
 	vector<BlmRecord> m_oneDayRecord;
-	int m_channel;
+	vector<CStatic *>  m_recordIcon;
+	int m_channelID;
+	CMainDlg *m_parent;
 public:
 	enum { IDD = IDD_DIALOG_PLAY };
-
+	
+	CPlayDlg(CMainDlg *parent){m_parent = parent;}
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg){
 		return CWindow::IsDialogMessage(pMsg);
@@ -70,6 +76,7 @@ public:
 		COMMAND_HANDLER(IDC_BUTTON_PAUSE, BN_CLICKED, OnBnClickedButtonPause)
 		NOTIFY_HANDLER(IDC_MONTHCALENDAR, MCN_GETDAYSTATE, OnMcnGetdaystateMonthcalendar)
 		NOTIFY_HANDLER(IDC_MONTHCALENDAR, MCN_SELCHANGE, OnMcnSelchangeMonthcalendar)
+		COMMAND_HANDLER(IDC_LIST_CHANNEL, LBN_SELCHANGE, OnLbnSelchangeListChannel)
 	END_MSG_MAP()
 
 	LRESULT OnClose(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
@@ -88,4 +95,5 @@ public:
 	void calCurrentPos();
 	bool playFile(CString fileName,int beginTime,int endTime);
 	void closeFile();
+	LRESULT OnLbnSelchangeListChannel(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };

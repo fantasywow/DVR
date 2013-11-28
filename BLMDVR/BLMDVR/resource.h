@@ -52,6 +52,7 @@
 #define IDC_LIST1                       1042
 #define IDC_CHANNEL_LIST                1042
 #define IDC_LIST_DISK                   1042
+#define IDC_LIST_CHANNEL                1042
 #define IDC_CONFIRM                     1043
 #define IDC_CANCEL                      1044
 #define IDC_EDIT_CHANNELNAME            1045
@@ -79,7 +80,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1059
+#define _APS_NEXT_CONTROL_VALUE         1060
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

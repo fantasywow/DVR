@@ -59,8 +59,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	FocusChannel(0);
 	//默认布局
 	SetPreviewDlgLayout(PREVIEWLAYOUT4,0);
-	//计时器
+	//计时器 时钟
 	SetTimer(1,1000);
+	//录像
+	SetTimer(2,1000);
 	SetWindowPos(NULL,0,0,1000,700,SWP_SHOWWINDOW);
 	CenterWindow();
 
@@ -212,17 +214,24 @@ LRESULT CMainDlg::OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, H
 }
 
 
-LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
+	int timerID = (int)wParam;
+	CString test;
+	test.Format("%d",timerID);
+	ATLTRACE(test);
 	SYSTEMTIME st;
 	CString time;
 	GetLocalTime(&st);
 	time.Format("%d.%d.%d   %d:%02d:%02d",st.wYear,st.wMonth,st.wDay,st.wHour,st.wMinute,st.wSecond);
 	GetDlgItem(IDC_TIME_LABEL).SetWindowText(time);
-
-	if (st.wMinute==0&&st.wSecond==0)
+	
+	if (timerID ==2)
 	{
-		CheckRecordPlan(st.wDayOfWeek,st.wHour);
+		if (st.wMinute==0&&st.wSecond==0)
+		{
+			CheckRecordPlan(st.wDayOfWeek,st.wHour);
+		}
 	}
 
 	return 0;
@@ -367,7 +376,7 @@ void CMainDlg::initValue()
 
 LRESULT CMainDlg::OnBnClickedButtonChoosefile(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	m_playDlg = new CPlayDlg();
+	m_playDlg = new CPlayDlg(this);
 	m_playDlg->Create(NULL);
 	m_playDlg->ShowWindow(TRUE);
 	return 0;
@@ -412,20 +421,15 @@ void CMainDlg::StartCaptureVideo(int iChannel,bool sub)
 		SetupSubChannel(m_channelHandle[iChannel], 1);
 		CaptureIFrame(m_channelHandle[iChannel]);
 		StartSubVideoCapture(m_channelHandle[iChannel]);
+		m_isVideoCapture[iChannel+BLM_CHANNEL_MAX] = TRUE;
 	}
 
 	SetupSubChannel(m_channelHandle[iChannel], 0);
 	CaptureIFrame(m_channelHandle[iChannel]);
 	int iRet = StartVideoCapture(m_channelHandle[iChannel]);
 
-	if (iRet != SS_SUCCESS)
-	{
-		MessageBox("录制失败");
-	}
-	else
-	{
-		m_isVideoCapture[iChannel] = TRUE;
-	}
+	m_isVideoCapture[iChannel] = TRUE;
+
 }
 
 void CMainDlg::StopCaptureVideo(int iChannel,bool sub)
@@ -434,6 +438,7 @@ void CMainDlg::StopCaptureVideo(int iChannel,bool sub)
 	if (sub) 
 	{
 		StopSubVideoCapture(m_channelHandle[iChannel]);
+		m_isVideoCapture[iChannel+BLM_CHANNEL_MAX] = FALSE;
 	}
 	SYSTEMTIME systemTime;
 	GetLocalTime(&systemTime);
@@ -473,10 +478,26 @@ LRESULT CMainDlg::OnBnClickedButtonRecordOn(WORD /*wNotifyCode*/, WORD /*wID*/, 
 	if (m_isRecordOn)
 	{
 		GetDlgItem(IDC_BUTTON_RECORD_ON).SetWindowText("On");
+		SetTimer(2,1000);
 	} 
 	else
 	{
 		GetDlgItem(IDC_BUTTON_RECORD_ON).SetWindowText("Off");
+		KillTimer(2);
+		for (int i =0 ;i<BLM_CHANNEL_MAX;i++)
+		{
+			if (m_isVideoCapture[i] == TRUE)
+			{
+				StopCaptureVideo(i,0);
+			}
+		}
+		for (int i =0 ;i<BLM_CHANNEL_MAX;i++)
+		{
+			if (m_isVideoCapture[i+BLM_CHANNEL_MAX] == TRUE)
+			{
+				StopCaptureVideo(i,1);
+			}
+		}
 	}
 	return 0;
 }
