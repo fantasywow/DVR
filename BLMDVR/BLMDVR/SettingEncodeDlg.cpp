@@ -103,10 +103,10 @@ void CEncodeSettingDlg::initComboBox()
 	m_format.AddString("D1");
 	m_format_sub=GetDlgItem(IDC_COMBO_FORMAT_SUB);
 	m_format_sub.EnableWindow(FALSE);
-	m_format_sub.AddString("CIF");
 	m_format_sub.AddString("QCIF");
+	m_format_sub.AddString("CIF");
 	m_format_sub.AddString("2CIF");
-	m_format_sub.AddString("D1");
+	m_format_sub.AddString("HD1");
 	m_frameRate=GetDlgItem(IDC_COMBO_FRAMERATE);
 	m_frameRate.EnableWindow(FALSE);
 	m_frameRate.AddString("25");

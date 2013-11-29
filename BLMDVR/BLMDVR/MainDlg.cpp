@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "dhplay.h"
+#include "dhvecsystem.h"
 #include "MainDlg.h"
 #include "PreviewDlg.h"
 #include "RecordManager.h"
@@ -285,7 +286,64 @@ void CMainDlg::FocusChannel( int channelID )
 
 void CMainDlg::updateSetting()
 {
-	//todo
+	for (int i = 0;i<BLM_CHANNEL_MAX;i++)
+	{
+		if (m_channelHandle[i] != INVALID_HANDLE_VALUE)
+		{
+			//取值范围：12～30
+			//系统默认：16
+			int quant[5]={12,16,20,24,30};
+			SetDefaultQuant(m_channelHandle[i],quant[m_settingDlg->m_encodeSetting[i].quality],NULL,NULL);
+			/*typedef enum 
+			{
+				ENC_QCIF_FORMAT = 1,
+				ENC_CIF_FORMAT = 2,
+				ENC_MCIF_FORMAT = 3,
+				ENC_HCIF_FORMAT = 4,
+				ENC_2CIF_FORMAT = 5,
+				ENC_HD1_FORMAT = 6,
+				ENC_4CIF_FORMAT = 7,
+			}PictureFormat_t;
+			//PictureForamt_t
+			//m_format.AddString("CIF");
+			//m_format.AddString("QCIF");
+			//m_format.AddString("2CIF");
+			//m_format.AddString("D1");
+			*/
+			int format[4] = {1,2,5,6};
+			SetEncoderPictureFormat(m_channelHandle[i],(PictureFormat_t)format[m_settingDlg->m_encodeSetting[i].format]);
+			//N 制：1,2,3,4,5,6,7,10,15,30；
+			//P 制：1,2,3,4,5,6,8,12,25。
+			int frameRateP[1] ={25};
+			int frameRateN[1] ={30};
+			VideoStandard_t vs;
+			int a,b,c,d;//useless
+			GetVideoPara(m_channelHandle[i],&vs,&a,&b,&c,&d);
+			if (vs==STANDARD_PAL)
+			{
+				SetIBPMode(m_channelHandle[i],25,0,0,frameRateP[m_settingDlg->m_encodeSetting[i].frameRate]);
+			}else{
+				SetIBPMode(m_channelHandle[i],25,0,0,frameRateN[m_settingDlg->m_encodeSetting[i].frameRate]);
+			}
+			int maxBits[5];
+			SetupBitrateControl(m_channelHandle[i],5*1024*1024);
+			if (m_settingDlg->m_encodeSetting[i].sub)
+			{
+				SetSubEncoderPictureFormat(m_channelHandle[i],(PictureFormat_t)format[m_settingDlg->m_encodeSetting[i].format_sub]);
+				SetupSubChannel(m_channelHandle[i],1);
+				SetDefaultQuant(m_channelHandle[i],quant[m_settingDlg->m_encodeSetting[i].quality_sub],NULL,NULL);
+				if (vs==STANDARD_PAL)
+				{
+					SetIBPMode(m_channelHandle[i],25,0,0,frameRateP[m_settingDlg->m_encodeSetting[i].frameRate_sub]);
+				}else{
+					SetIBPMode(m_channelHandle[i],25,0,0,frameRateN[m_settingDlg->m_encodeSetting[i].frameRate_sub]);
+				}
+				SetupBitrateControl(m_channelHandle[i],5*1024*1024);
+				SetupSubChannel(m_channelHandle[i],0);
+			}
+
+		}
+	}
 }
 
 void CMainDlg::initSlide()
@@ -479,6 +537,9 @@ LRESULT CMainDlg::OnBnClickedButtonRecordOn(WORD /*wNotifyCode*/, WORD /*wID*/, 
 	{
 		GetDlgItem(IDC_BUTTON_RECORD_ON).SetWindowText("On");
 		SetTimer(2,1000);
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		CheckRecordPlan(st.wDayOfWeek,st.wHour);
 	} 
 	else
 	{

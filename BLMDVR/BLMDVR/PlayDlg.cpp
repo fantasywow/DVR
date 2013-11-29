@@ -4,7 +4,7 @@
 #include "RecordManager.h"
 #include "MainDlg.h"
 //100 zhuan 60
-double convert100to60(int arg){
+inline double convert100to60(int arg){
 	int	hour = arg/10000;
 	int minute = arg/100%100;
 	int second = arg%100;
