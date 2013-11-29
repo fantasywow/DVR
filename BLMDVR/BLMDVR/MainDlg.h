@@ -31,6 +31,7 @@ private:
 	SYSTEMTIME m_systemTime;
 	CTrackBarCtrl m_brightnessSlide,m_contrastSlide,m_saturationSlide,m_hueSlide;
 	CStatic m_brightnessTitle,m_contrastTitle,m_saturationTitle,m_hueTitle;
+	CButton m_defaultButton;
 	CString m_recordFileName[BLM_CHANNEL_MAX*2];
 	BOOL m_isFullScreen;
 	PreviewLayout m_lastLayout;
@@ -66,6 +67,11 @@ public:
 		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
 		COMMAND_HANDLER(IDC_BUTTON_OPENPLAY, BN_CLICKED, OnBnClickedButtonChoosefile)
 		COMMAND_HANDLER(IDC_BUTTON_RECORD_ON, BN_CLICKED, OnBnClickedButtonRecordOn)
+		COMMAND_HANDLER(IDC_BUTTON_DEFAULT, BN_CLICKED, OnBnClickedButtonDefault)
+		COMMAND_HANDLER(IDC_BUTTON_UP, BN_CLICKED, OnBnClickedButtonUp)
+		COMMAND_HANDLER(IDC_BUTTON_LEFT, BN_CLICKED, OnBnClickedButtonLeft)
+		COMMAND_HANDLER(IDC_BUTTON_DOWN, BN_CLICKED, OnBnClickedButtonDown)
+		COMMAND_HANDLER(IDC_BUTTON_RIGHT, BN_CLICKED, OnBnClickedButtonRight)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -95,4 +101,10 @@ public:
 	void StopCaptureVideo(int iChannel,bool sub);
 	void CheckRecordPlan(int dayofWeek,int hour);
 	LRESULT OnBnClickedButtonRecordOn(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	void initCradleButton();
+	LRESULT OnBnClickedButtonUp(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedButtonLeft(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedButtonDown(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedButtonRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };

@@ -4,7 +4,7 @@
 
 #include "resource.h"
 #include "BlmMessage.h"
-
+#include "PreviewDlg.h"
 
 class CSettingDlg;
 
@@ -17,6 +17,9 @@ class CCradleSettingDlg : public CDialogImpl<CCradleSettingDlg> ,
 
 private:
 	CSettingDlg *m_parent;
+	CListViewCtrl m_channelList;
+	int m_selectedChannel;
+	CPreiviewDlg m_previewDlg;
 public:
 	CCradleSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_CRADLE_SETTING };
@@ -36,6 +39,7 @@ public:
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		MESSAGE_HANDLER(BM_CONFIRM_SETTING, OnConfirm)
+		NOTIFY_HANDLER(IDC_LIST_CRADLE, LVN_ITEMCHANGED, OnLvnItemchangedListCradle)
 	END_MSG_MAP()
 
 
@@ -50,4 +54,6 @@ public:
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	void initList();
+	LRESULT OnLvnItemchangedListCradle(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 };

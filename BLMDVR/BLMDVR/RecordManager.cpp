@@ -117,18 +117,18 @@ bool InitRecordIndex()
 
 
 // 	{ //for test
-//  		SYSTEMTIME  st;
-//  		GetLocalTime(&st);
-//  		CString test;
-// 		for (int i =0;i<5;i++)
-// 		{
-// 			test.Format("testtest%d",i);
-// 			st.wMinute=0;
-// 			st.wHour++;
-// 			InsertOneRecord(0,0,st,test);
-// 			st.wMinute = 30;
-// 			updateEndTime(st,test);
-// 		}
+ 		SYSTEMTIME  st;
+ 		GetLocalTime(&st);
+  		CString test;
+		for (int i =0;i<5;i++)
+		{
+			test.Format("testtesttest%d",i);
+			st.wMinute=0;
+			st.wHour++;
+			InsertOneRecord(0,0,st,test);
+			st.wMinute = 30;
+			updateEndTime(st,test);
+		}
 //  		InsertOneRecord(0,0,st,test);
 //  		updateEndTime(st,test);
 // // 		MONTHDAYSTATE prgDayState;

@@ -53,6 +53,7 @@
 #define IDC_CHANNEL_LIST                1042
 #define IDC_LIST_DISK                   1042
 #define IDC_LIST_CHANNEL                1042
+#define IDC_LIST_CRADLE                 1042
 #define IDC_CONFIRM                     1043
 #define IDC_CANCEL                      1044
 #define IDC_EDIT_CHANNELNAME            1045
@@ -68,7 +69,17 @@
 #define IDC_BUTTON1                     1057
 #define IDC_BUTTON_PAUSE                1057
 #define IDC_BUTTON_RECORD_ON            1057
+#define IDC_BUTTON_SETTING_UP           1057
 #define IDC_MONTHCALENDAR               1058
+#define IDC_BUTTON_SETTING_LEFT         1058
+#define IDC_BUTTON_SETTNG_DOWN          1059
+#define IDC_BUTTON_DEFAULT              1060
+#define IDC_BUTTON4                     1060
+#define IDC_BUTTON_SETTING_RIGHT        1060
+#define IDC_BUTTON_UP                   1061
+#define IDC_BUTTON_LEFT                 1062
+#define IDC_BUTTON_RIGHT                1063
+#define IDC_BUTTON_DOWN                 1064
 #define IDC_LAYOUTBUTTON1               1077
 #define IDC_LAYOUTBUTTON4               1078
 #define IDC_LAYOUTBUTTON8               1079
@@ -80,7 +91,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1060
+#define _APS_NEXT_CONTROL_VALUE         1062
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

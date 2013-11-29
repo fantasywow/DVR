@@ -35,7 +35,6 @@ BOOL CMainDlg::OnIdle()
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-
 	// set icons
 	HICON hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
 	SetIcon(hIcon, TRUE);
@@ -48,7 +47,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
 
-
 	InitRecordIndex();
 	initDH();
 	initPreviewDlg();
@@ -56,6 +54,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	initTimeLabel();
 	initSlide();
 	initValue();
+	initCradleButton();
 	//默认选中channel 0
 	FocusChannel(0);
 	//默认布局
@@ -218,9 +217,6 @@ LRESULT CMainDlg::OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, H
 LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	int timerID = (int)wParam;
-	CString test;
-	test.Format("%d",timerID);
-	ATLTRACE(test);
 	SYSTEMTIME st;
 	CString time;
 	GetLocalTime(&st);
@@ -243,7 +239,7 @@ LRESULT CMainDlg::OnHScroll(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/,
 	int iRet;
 	if (m_channelHandle[m_focusChannel]!=INVALID_HANDLE_VALUE)
 	{
-		iRet = SetVideoPara(m_channelHandle[0],m_brightnessSlide.GetPos(),m_contrastSlide.GetPos(),m_saturationSlide.GetPos(),m_hueSlide.GetPos());
+		iRet = SetVideoPara(m_channelHandle[m_focusChannel],m_brightnessSlide.GetPos(),m_contrastSlide.GetPos(),m_saturationSlide.GetPos(),m_hueSlide.GetPos());
 	}
 	return true;
 }
@@ -268,6 +264,7 @@ void CMainDlg::FocusChannel( int channelID )
 		GetDlgItem(IDC_SATURATION_SLIDER).EnableWindow(FALSE);
 		GetDlgItem(IDC_BRGHTNESS_SLIDER).EnableWindow(FALSE);
 		GetDlgItem(IDC_CONTRAST_SLIDER).EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_DEFAULT).EnableWindow(FALSE);
 	}else{
 		int hue,saturation,brightness,contrast;
 		GetVideoPara(m_channelHandle[m_focusChannel],0,&brightness,&contrast,&saturation,&hue);
@@ -276,6 +273,7 @@ void CMainDlg::FocusChannel( int channelID )
 		GetDlgItem(IDC_SATURATION_SLIDER).EnableWindow(TRUE);
 		GetDlgItem(IDC_BRGHTNESS_SLIDER).EnableWindow(TRUE);
 		GetDlgItem(IDC_CONTRAST_SLIDER).EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_DEFAULT).EnableWindow(TRUE);
 
 		m_hueSlide.SetPos(hue);
 		m_saturationSlide.SetPos(saturation);
@@ -314,8 +312,8 @@ void CMainDlg::updateSetting()
 			SetEncoderPictureFormat(m_channelHandle[i],(PictureFormat_t)format[m_settingDlg->m_encodeSetting[i].format]);
 			//N 制：1,2,3,4,5,6,7,10,15,30；
 			//P 制：1,2,3,4,5,6,8,12,25。
-			int frameRateP[1] ={25};
-			int frameRateN[1] ={30};
+			int frameRateP[10] ={1,2,3,4,5,6,7,10,15,30};
+			int frameRateN[9] ={1,2,3,4,5,6,8,12,25};
 			VideoStandard_t vs;
 			int a,b,c,d;//useless
 			GetVideoPara(m_channelHandle[i],&vs,&a,&b,&c,&d);
@@ -350,28 +348,35 @@ void CMainDlg::initSlide()
 {
 	m_hueTitle.Attach(GetDlgItem(IDC_STATIC_HUE));
 	m_hueTitle.SetWindowText("色相");
-	m_hueTitle.SetWindowPos(NULL,730,130,50,20,SWP_SHOWWINDOW);
+	m_hueTitle.SetWindowPos(NULL,730,100,50,20,SWP_SHOWWINDOW);
 	m_hueSlide.Attach(GetDlgItem(IDC_HUE_SLIDER));
-	m_hueSlide.SetWindowPos(NULL,730,150,200,30,SWP_SHOWWINDOW);
+	m_hueSlide.SetWindowPos(NULL,730,120,200,30,SWP_SHOWWINDOW);
 	m_hueSlide.SetRange(0,255,TRUE);
+	m_hueSlide.SetPos(128);
 	m_saturationTitle.Attach(GetDlgItem(IDC_STATIC_SATURATION));
 	m_saturationTitle.SetWindowText("饱和度");
-	m_saturationTitle.SetWindowPos(NULL,730,180,50,20,SWP_SHOWWINDOW);
+	m_saturationTitle.SetWindowPos(NULL,730,150,50,20,SWP_SHOWWINDOW);
 	m_saturationSlide.Attach(GetDlgItem(IDC_SATURATION_SLIDER));
-	m_saturationSlide.SetWindowPos(NULL,730,200,200,30,SWP_SHOWWINDOW);
+	m_saturationSlide.SetWindowPos(NULL,730,170,200,30,SWP_SHOWWINDOW);
 	m_saturationSlide.SetRange(0,255,TRUE);
+	m_saturationSlide.SetPos(128);
 	m_brightnessTitle.Attach(GetDlgItem(IDC_STATIC_BRGHTNESS));
 	m_brightnessTitle.SetWindowText("亮度");
-	m_brightnessTitle.SetWindowPos(NULL,730,230,50,20,SWP_SHOWWINDOW);
+	m_brightnessTitle.SetWindowPos(NULL,730,200,50,20,SWP_SHOWWINDOW);
 	m_brightnessSlide.Attach(GetDlgItem(IDC_BRGHTNESS_SLIDER));
-	m_brightnessSlide.SetWindowPos(NULL,730,250,200,30,SWP_SHOWWINDOW);
+	m_brightnessSlide.SetWindowPos(NULL,730,220,200,30,SWP_SHOWWINDOW);
 	m_brightnessSlide.SetRange(0,255,TRUE);
+	m_brightnessSlide.SetPos(128);
 	m_contrastTitle.Attach(GetDlgItem(IDC_STATIC_CONTRAST));
 	m_contrastTitle.SetWindowText("对比度");
-	m_contrastTitle.SetWindowPos(NULL,730,280,50,20,SWP_SHOWWINDOW);
+	m_contrastTitle.SetWindowPos(NULL,730,250,50,20,SWP_SHOWWINDOW);
 	m_contrastSlide.Attach(GetDlgItem(IDC_CONTRAST_SLIDER));
-	m_contrastSlide.SetWindowPos(NULL,730,300,200,30,SWP_SHOWWINDOW);
+	m_contrastSlide.SetWindowPos(NULL,730,270,200,30,SWP_SHOWWINDOW);
 	m_contrastSlide.SetRange(0,255,TRUE);
+	m_contrastSlide.SetPos(128);
+	m_defaultButton.Attach(GetDlgItem(IDC_BUTTON_DEFAULT));
+	m_defaultButton.SetWindowPos(NULL,750,300,50,20,SWP_SHOWWINDOW);
+
 }
 
 void CMainDlg::initTimeLabel()
@@ -560,5 +565,54 @@ LRESULT CMainDlg::OnBnClickedButtonRecordOn(WORD /*wNotifyCode*/, WORD /*wID*/, 
 			}
 		}
 	}
+	return 0;
+}
+
+LRESULT CMainDlg::OnBnClickedButtonDefault(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	if (m_channelHandle[m_focusChannel]!=INVALID_HANDLE_VALUE)
+	{
+		m_brightnessSlide.SetPos(128);
+		m_contrastSlide.SetPos(128);
+		m_saturationSlide.SetPos(128);
+		m_hueSlide.SetPos(128);
+		SetVideoPara(m_channelHandle[m_focusChannel],m_brightnessSlide.GetPos(),m_contrastSlide.GetPos(),m_saturationSlide.GetPos(),m_hueSlide.GetPos());
+	}
+	return 0;
+}
+
+void CMainDlg::initCradleButton()
+{
+	GetDlgItem(IDC_BUTTON_UP).SetWindowPos(NULL,820,350,30,30,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_BUTTON_DOWN).SetWindowPos(NULL,820,430,30,30,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_BUTTON_LEFT).SetWindowPos(NULL,780,390,30,30,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_BUTTON_RIGHT).SetWindowPos(NULL,860,390,30,30,SWP_SHOWWINDOW);
+}
+
+LRESULT CMainDlg::OnBnClickedButtonUp(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	return 0;
+}
+
+LRESULT CMainDlg::OnBnClickedButtonLeft(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	return 0;
+}
+
+LRESULT CMainDlg::OnBnClickedButtonDown(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	return 0;
+}
+
+LRESULT CMainDlg::OnBnClickedButtonRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	// TODO: 在此添加控件通知处理程序代码
+
 	return 0;
 }

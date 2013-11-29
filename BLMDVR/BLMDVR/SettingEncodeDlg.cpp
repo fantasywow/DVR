@@ -109,9 +109,29 @@ void CEncodeSettingDlg::initComboBox()
 	m_format_sub.AddString("HD1");
 	m_frameRate=GetDlgItem(IDC_COMBO_FRAMERATE);
 	m_frameRate.EnableWindow(FALSE);
+	//N 制：1,2,3,4,5,6,7,10,15,30；
+	//P 制：1,2,3,4,5,6,8,12,25。
+	m_frameRate.AddString("1");
+	m_frameRate.AddString("2");
+	m_frameRate.AddString("3");
+	m_frameRate.AddString("4");
+	m_frameRate.AddString("5");
+	m_frameRate.AddString("6");
+	m_frameRate.AddString("8");
+	m_frameRate.AddString("12");
 	m_frameRate.AddString("25");
 	m_frameRate_sub=GetDlgItem(IDC_COMBO_FRAMERATE_SUB);
 	m_frameRate_sub.EnableWindow(FALSE);
+	//N 制：1,2,3,4,5,6,7,10,15,30；
+	//P 制：1,2,3,4,5,6,8,12,25。
+	m_frameRate_sub.AddString("1");
+	m_frameRate_sub.AddString("2");
+	m_frameRate_sub.AddString("3");
+	m_frameRate_sub.AddString("4");
+	m_frameRate_sub.AddString("5");
+	m_frameRate_sub.AddString("6");
+	m_frameRate_sub.AddString("8");
+	m_frameRate_sub.AddString("12");
 	m_frameRate_sub.AddString("25");
 	m_maxBit=GetDlgItem(IDC_COMBO_MAXBIT);
 	m_maxBit.EnableWindow(FALSE);

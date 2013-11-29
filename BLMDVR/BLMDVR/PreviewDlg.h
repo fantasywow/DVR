@@ -15,7 +15,7 @@ private:
 	int m_channelID;
 	void focus();
 	void unfocus();
-
+	CStatic m_captureIcon;
 public:
 	enum { IDD = IDD_PREVIEWDLG };
 
@@ -32,11 +32,21 @@ public:
 	BEGIN_MSG_MAP(CPreiviewDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_SIZE, OnSizeChanged)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		COMMAND_HANDLER(IDC_CAPTURE_PICTURE, BN_CLICKED, OnBnClickedCapturePicture)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnPreviewFocus)
 		MESSAGE_HANDLER(BM_PREVIEW_UNFOCUS, OnPreviewUnFocus)
 	END_MSG_MAP()
+
+	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+	{
+		CMessageLoop* pLoop = _Module.GetMessageLoop();
+		ATLASSERT(pLoop != NULL);
+		pLoop->RemoveMessageFilter(this);
+		pLoop->RemoveIdleHandler(this);
+		return 0;
+	}
 
 	// Handler prototypes (uncomment arguments if needed):
 	//	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)

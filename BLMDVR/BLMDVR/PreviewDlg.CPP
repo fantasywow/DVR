@@ -12,6 +12,9 @@ LRESULT CPreiviewDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
 	temp.Format("%d",m_channelID);
 	GetDlgItem(IDC_CHANNEL_ID).SetWindowText(temp);
 	GetDlgItem(IDC_CHANNEL_ID).SetWindowPos(NULL,10,0,20,20,SWP_SHOWWINDOW);
+
+	m_captureIcon.Create(m_hWnd, CRect(0,0,0,0) ,NULL, WS_CHILD | WS_VISIBLE|SS_BLACKRECT, NULL);		
+	SetCaptureIcon(false);
 	return true;
 }
 
@@ -26,7 +29,9 @@ LRESULT CPreiviewDlg::OnSizeChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 {
 	CRect rc;
 	GetWindowRect(rc);
-	GetDlgItem(IDC_CAPTURE_PICTURE).SetWindowPos(NULL,rc.Width()-40,0,20,20,SWP_SHOWWINDOW);
+	GetDlgItem(IDC_CAPTURE_PICTURE).SetWindowPos(NULL,rc.Width()-50,0,20,20,SWP_SHOWWINDOW);
+	m_captureIcon.SetWindowPos(NULL,rc.Width()-30,0,20,20,SWP_SHOWWINDOW);
+
 	return true;
 
 }
@@ -34,6 +39,13 @@ LRESULT CPreiviewDlg::OnSizeChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 void CPreiviewDlg::SetCaptureIcon(bool captureOn)
 {
 	//ÉèÖÃÂ¼ÖÆ×´Ì¬Í¼±ê
+	if (captureOn)
+	{
+		//m_captureIcon.SetIcon();
+	}else{
+		//m_captureIcon.SetIcon();
+	}
+
 }
 LRESULT CPreiviewDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {

@@ -16,23 +16,12 @@ LRESULT CPictureSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPAR
 	m_channelNameEdit.EnableWindow(FALSE);
 	GetDlgItem(IDC_CHECK_OSDNAME).EnableWindow(FALSE);
 	GetDlgItem(IDC_CHECK_OSDTIME).EnableWindow(FALSE);
-	m_channelList = GetDlgItem(IDC_CHANNEL_LIST);
-	m_channelList.SetWindowLong(GWL_STYLE, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE );
-	m_channelList.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_FLATSB);
-	m_channelList.AddColumn("序号", 0);
-	m_channelList.AddColumn("通道名称", 1);
-	for (int i=0,j=0;i<BLM_CHANNEL_MAX;i++)
-	{
-// 		if (m_parent->m_channelHandle[i]!=INVALID_HANDLE_VALUE)
-// 		{
-			CString channelID;
-			channelID.Format("%d",i);
-			m_channelList.AddItem(j,0,channelID);
-			m_channelList.AddItem(j,1,m_parent->m_channelName[i]);
-			m_channelIndex[j]=i;
-			j++;
-/*		}*/
-	}
+
+	initList();
+
+	m_previewDlg.Create(m_hWnd,0);
+	m_previewDlg.SetWindowPos(NULL,200,15,264,216,SWP_SHOWWINDOW);
+
 
 	return true;
 }
@@ -83,4 +72,26 @@ LRESULT CPictureSettingDlg::OnConfirm( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM 
 /*		}*/
 	}
 	return 0;
+}
+
+void CPictureSettingDlg::initList()
+{
+	m_channelList = GetDlgItem(IDC_CHANNEL_LIST);
+	m_channelList.SetWindowLong(GWL_STYLE, LVS_REPORT | LVS_SINGLESEL | WS_CHILD | WS_VISIBLE );
+	m_channelList.SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_FLATSB);
+	m_channelList.AddColumn("序号", 0);
+	m_channelList.AddColumn("通道名称", 1);
+	for (int i=0,j=0;i<BLM_CHANNEL_MAX;i++)
+	{
+		// 		if (m_parent->m_channelHandle[i]!=INVALID_HANDLE_VALUE)
+		// 		{
+		CString channelID;
+		channelID.Format("%d",i);
+		m_channelList.AddItem(j,0,channelID);
+		m_channelList.AddItem(j,1,m_parent->m_channelName[i]);
+		m_channelIndex[j]=i;
+		j++;
+		/*		}*/
+	}
+
 }

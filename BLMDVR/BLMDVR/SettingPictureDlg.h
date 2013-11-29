@@ -3,7 +3,7 @@
 
 #include "resource.h"
 #include "BlmMessage.h"
-
+#include "PreviewDlg.h"
 
 class CSettingDlg;
 
@@ -21,7 +21,7 @@ private:
 	CSettingDlg *m_parent;
 	int m_osdNameCheck,m_osdTimeCheck;
 	int m_channelIndex[BLM_CHANNEL_MAX];
-
+	CPreiviewDlg m_previewDlg;
 public:
 	CPictureSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_PICTURE_SETTING };
@@ -65,4 +65,5 @@ public:
 	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLvnItemchangedChannellist(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 	LRESULT OnEnChangeEditChannelname(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	void initList();
 };

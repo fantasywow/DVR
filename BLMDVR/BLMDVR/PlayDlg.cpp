@@ -227,7 +227,7 @@ void CPlayDlg::calCurrentPos()
 bool CPlayDlg::playFile( CString fileName,int beginTime,int endTime )
 {
 	PLAY_GetFreePort(&m_port);
-	if (PLAY_OpenFile(m_port,fileName.GetBuffer(0))==FALSE);
+	if (PLAY_OpenFile(m_port,fileName.GetBuffer(0))==FALSE)
 	{
 		missingOneRecord(fileName);
 		m_port = -1;
