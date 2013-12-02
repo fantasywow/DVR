@@ -6,5 +6,6 @@ void LookUpbyMonth(SYSTEMTIME st,LPMONTHDAYSTATE prgDayState);
 void LookUpbyDay(SYSTEMTIME st,vector<BlmRecord>& record);
 void InsertOneRecord(int channel,int sub,SYSTEMTIME st,CString fileFullPathandName);
 void updateEndTime(SYSTEMTIME st,CString fileFullPathandName);
-bool InitRecordIndex();
+bool InitDB();
+
 void missingOneRecord(CString fileFullPathandName);

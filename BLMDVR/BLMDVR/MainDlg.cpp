@@ -10,6 +10,9 @@
 #include "PreviewDlg.h"
 #include "RecordManager.h"
 
+static const string SETTING_FILE = ".//setting.ini";
+
+
 int StreamDirectReadCallback(ULONG channelNumber, void * DataBuf,DWORD Length, int FrameType, void *context)
 {
 	CMainDlg * mainDlg;
@@ -47,13 +50,15 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddIdleHandler(this);
 	UIAddChildWindowContainer(m_hWnd);
 
-	InitRecordIndex();
-	initDH();
+
+	initValue();
+	LoadSetting();
+	InitDB();
 	initPreviewDlg();
+	initDH();
 	initBottomButton();
 	initTimeLabel();
 	initSlide();
-	initValue();
 	initCradleButton();
 	//默认选中channel 0
 	FocusChannel(0);
@@ -109,6 +114,8 @@ LRESULT CMainDlg::OnCapturePicture(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
 LRESULT CMainDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	// unregister message filtering and idle updates
+	SaveSetting();
+
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
 	pLoop->RemoveMessageFilter(this);
@@ -216,6 +223,7 @@ LRESULT CMainDlg::OnBnClickedSettingbutton(WORD /*wNotifyCode*/, WORD /*wID*/, H
 
 LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
+
 	int timerID = (int)wParam;
 	SYSTEMTIME st;
 	CString time;
@@ -323,6 +331,7 @@ void CMainDlg::updateSetting()
 			}else{
 				SetIBPMode(m_channelHandle[i],25,0,0,frameRateN[m_settingDlg->m_encodeSetting[i].frameRate]);
 			}
+			//todo
 			int maxBits[5];
 			SetupBitrateControl(m_channelHandle[i],5*1024*1024);
 			if (m_settingDlg->m_encodeSetting[i].sub)
@@ -615,4 +624,94 @@ LRESULT CMainDlg::OnBnClickedButtonRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWN
 	// TODO: 在此添加控件通知处理程序代码
 
 	return 0;
+}
+
+
+void CMainDlg::LoadSetting()
+{
+	GetPrivateProfileString("StorePath","Path","C:\\",m_settingDlg->m_capturePath.GetBuffer(30),30,SETTING_FILE.c_str());
+	for(int i = 0;i<BLM_CHANNEL_MAX;i++){
+		CString temp;
+		temp.Format("EncodeSetting%d",i);
+		m_settingDlg->m_encodeSetting[i].audio = GetPrivateProfileInt(temp,"audio",1,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].quality = GetPrivateProfileInt(temp,"quality",1,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].format = GetPrivateProfileInt(temp,"format",0,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].frameRate = GetPrivateProfileInt(temp,"frameRate",8,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].maxBit = GetPrivateProfileInt(temp,"maxBit",0,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].sub = GetPrivateProfileInt(temp,"sub",0,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].quality_sub = GetPrivateProfileInt(temp,"quality_sub",1,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].format_sub = GetPrivateProfileInt(temp,"format_sub",0,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].frameRate_sub = GetPrivateProfileInt(temp,"frameRate_sub",8,SETTING_FILE.c_str());
+		m_settingDlg->m_encodeSetting[i].maxBit_sub = GetPrivateProfileInt(temp,"maxBit_sub",0,SETTING_FILE.c_str());
+	}
+	for (int i =0;i<BLM_CHANNEL_MAX;i++)
+	{
+		for (int j =0;j<7;j++)
+		{
+			for (int k=0;k<24;k++)
+			{
+				CString temp;
+				temp.Format("%d_%d_%d",i,j,k);
+				m_settingDlg->m_recodePlan[i][j][k] = GetPrivateProfileInt("RecordPlan",temp,0,SETTING_FILE.c_str());
+			}
+		}
+	}
+	for (int i =0;i<BLM_CHANNEL_MAX;i++)
+	{
+		CString label;
+		label.Format("chennel%d",i);
+		GetPrivateProfileString("ChannelName",label,label,m_settingDlg->m_channelName[i].GetBuffer(30),30,SETTING_FILE.c_str());
+	}
+}
+
+void CMainDlg::SaveSetting()
+{
+	WritePrivateProfileString("StorePath","Path",m_settingDlg->m_capturePath.GetBuffer(0),SETTING_FILE.c_str());
+
+	for(int i = 0;i<BLM_CHANNEL_MAX;i++){
+		CString label;
+		label.Format("EncodeSetting%d",i);
+		CString value;
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].audio);
+		WritePrivateProfileString(label,"audio",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].quality);
+		WritePrivateProfileString(label,"quality",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].format);
+		WritePrivateProfileString(label,"format",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].frameRate);
+		WritePrivateProfileString(label,"frameRate",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].maxBit);
+		WritePrivateProfileString(label,"maxBit",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].sub);
+		WritePrivateProfileString(label,"sub",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].quality_sub);
+		WritePrivateProfileString(label,"quality_sub",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].format_sub);
+		WritePrivateProfileString(label,"format_sub",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].frameRate_sub);
+		WritePrivateProfileString(label,"frameRate_sub",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_encodeSetting[i].maxBit_sub);
+		WritePrivateProfileString(label,"maxBit_sub",value,SETTING_FILE.c_str());
+	}
+	for (int i =0;i<BLM_CHANNEL_MAX;i++)
+	{
+		for (int j =0;j<7;j++)
+		{
+			for (int k=0;k<24;k++)
+			{
+				CString label;
+				label.Format("%d_%d_%d",i,j,k);
+				CString value;
+				value.Format("%d",m_settingDlg->m_recodePlan[i][j][k]);
+				WritePrivateProfileString("RecordPlan",label,value,SETTING_FILE.c_str());
+			}
+		}
+	}
+	for (int i =0;i<BLM_CHANNEL_MAX;i++)
+	{
+		CString label;
+		label.Format("chennel%d",i);
+		WritePrivateProfileString("ChannelName",label,m_settingDlg->m_channelName[i],SETTING_FILE.c_str());
+	}
+
 }

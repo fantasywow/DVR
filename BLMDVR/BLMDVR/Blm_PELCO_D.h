@@ -18,3 +18,23 @@
 {0xff,0x01,0x00,0x05,0x00,0x01,0x07,}//…æ≥˝‘§÷√µ„001
 {0xff,0x01,0x00,0x00,0x00,0x00,0x01,}//Õ£√¸¡Ó
 */
+
+#include "BlmSerialComm.h"
+
+
+class Blm_PELCO_D{
+public:
+	Blm_PELCO_D();
+	~Blm_PELCO_D();
+	Init();
+	Up();
+	Down();
+	Right();
+	Left();
+	Stop();
+	FocusNear();//Ωπæ‡
+	FocusFar();
+	ZoomWide();// ”Ω«
+	ZoomTele();
+
+};

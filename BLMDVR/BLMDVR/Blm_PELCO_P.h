@@ -21,10 +21,13 @@
 
 */
 
-class Blm_PELCO_D{
+#include "BlmSerialComm.h"
+
+
+class Blm_PELCO_P{
 public:
-	Blm_PELCO_D();
-	~Blm_PELCO_D();
+	Blm_PELCO_P();
+	~Blm_PELCO_P();
 	Init();
 	Up();
 	Down();

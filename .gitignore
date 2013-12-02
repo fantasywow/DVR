@@ -151,3 +151,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 /BLMDVR/BLMDVR/recorddb.db
+
+/BLMDVR/BLMDVR/setting.ini

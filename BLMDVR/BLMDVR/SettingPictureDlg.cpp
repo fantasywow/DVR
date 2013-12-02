@@ -18,7 +18,6 @@ LRESULT CPictureSettingDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPAR
 	GetDlgItem(IDC_CHECK_OSDTIME).EnableWindow(FALSE);
 
 	initList();
-
 	m_previewDlg.Create(m_hWnd,0);
 	m_previewDlg.SetWindowPos(NULL,200,15,264,216,SWP_SHOWWINDOW);
 
@@ -41,6 +40,9 @@ LRESULT CPictureSettingDlg::OnLvnItemchangedChannellist(int /*idCtrl*/, LPNMHDR 
 		CString buff;
 		m_channelList.GetItemText(index,1,buff);
 		m_channelNameEdit.SetWindowText(buff);
+
+		m_previewDlg.changeChannel(m_channelIndex[index]);
+		//StartVideoPreview(m_parent->m_channelHandle[i],m_previewDlg,&rc,FALSE,0,25);
 	}	
 	return 0;
 
@@ -94,4 +96,14 @@ void CPictureSettingDlg::initList()
 		/*		}*/
 	}
 
+}
+
+LRESULT CPictureSettingDlg::OnDestroy( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	m_previewDlg.DestroyWindow();
+	CMessageLoop* pLoop = _Module.GetMessageLoop();
+	ATLASSERT(pLoop != NULL);
+	pLoop->RemoveMessageFilter(this);
+	pLoop->RemoveIdleHandler(this);
+	return 0;
 }

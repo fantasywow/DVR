@@ -18,7 +18,7 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_isPlaying = FALSE;
 	m_port = -1;
 	m_channelID = 0;
-	SetWindowPos(NULL,0,0,800,600,SWP_SHOWWINDOW);
+	SetWindowPos(NULL,0,0,850,600,SWP_SHOWWINDOW);
 	CenterWindow();
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
@@ -49,6 +49,19 @@ LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	GetLocalTime(&st);
 	LookUpbyDay(st,m_oneDayRecord);
 	showOneDayRecord();
+
+	for (int i=0;i<24;i++)
+	{
+		int begin = 550 * i/24;
+		CStatic label;
+		label.Create(m_hWnd,CRect(0,0,0,0),"",WS_CHILD|WS_VISIBLE);
+		label.SetWindowPos(NULL,300+begin,380,15,15,SWP_SHOWWINDOW);
+		CString labelText;
+		labelText.Format("%d",i);
+		label.SetWindowText(labelText);
+	}
+
+
 
 	return TRUE;
 }
@@ -157,7 +170,7 @@ void CPlayDlg::showOneDayRecord()
 		begin = 550 * convert100to60(m_oneDayRecord[i].beginTime)/(24*60*60);
 		end = 550 * convert100to60(m_oneDayRecord[i].endTime)/(24*60*60);
 		record->Create(m_hWnd, CRect(0,0,end-begin,15) ,NULL, WS_CHILD | WS_VISIBLE|SS_BLACKRECT, NULL);		
-		record->SetWindowPos(NULL,250+begin,400+30*m_oneDayRecord[i].channel,end-begin,15,SWP_SHOWWINDOW);
+		record->SetWindowPos(NULL,300+begin,400+30*m_oneDayRecord[i].channel,end-begin,15,SWP_SHOWWINDOW);
 		m_recordIcon.push_back(record);
 	}
 	

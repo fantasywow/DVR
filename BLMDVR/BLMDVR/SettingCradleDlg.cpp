@@ -58,6 +58,19 @@ LRESULT CCradleSettingDlg::OnLvnItemchangedListCradle(int /*idCtrl*/, LPNMHDR pN
 	if (pNMLV->uNewState&LVIS_SELECTED) 
 	{
 		m_selectedChannel = m_channelList.GetSelectedIndex();   //获得点击的那个行
+
+		m_previewDlg.changeChannel(m_selectedChannel);
+
 	}	
+	return 0;
+}
+
+LRESULT CCradleSettingDlg::OnDestroy( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	m_previewDlg.DestroyWindow();
+	CMessageLoop* pLoop = _Module.GetMessageLoop();
+	ATLASSERT(pLoop != NULL);
+	pLoop->RemoveMessageFilter(this);
+	pLoop->RemoveIdleHandler(this);
 	return 0;
 }

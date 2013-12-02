@@ -43,7 +43,6 @@ private:
 	BOOL m_isRecordOn;
 public:
 	CSettingDlg*  m_settingDlg;
-	char psText[MAX_PATH*2];
 	enum { IDD = IDD_MAINDLG };
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -107,4 +106,7 @@ public:
 	LRESULT OnBnClickedButtonLeft(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedButtonDown(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedButtonRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	void LoadSetting();
+	void SaveSetting();
+
 };

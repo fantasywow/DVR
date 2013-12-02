@@ -80,3 +80,11 @@ void CPreiviewDlg::unfocus()
 {
 	//É¾³ýÑ¡ÖÐ±ß¿ò
 }
+
+void CPreiviewDlg::changeChannel( int channelId )
+{
+	m_channelID = channelId;
+	CString temp;
+	temp.Format("%d",m_channelID);
+	GetDlgItem(IDC_CHANNEL_ID).SetWindowText(temp);
+}

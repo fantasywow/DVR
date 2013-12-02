@@ -95,7 +95,7 @@ void InsertOneRecord( int channel,int sub,SYSTEMTIME st,CString fileFullPathandN
 }
 
 
-bool InitRecordIndex()
+bool InitDB()
 {
 	string fileName="recorddb.db";
 	HANDLE fileHandle = CreateFile(fileName.c_str(),GENERIC_READ | GENERIC_WRITE,NULL,NULL,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,NULL);
@@ -115,20 +115,19 @@ bool InitRecordIndex()
 		m_sqllitedb.execDML(strsql.c_str());
 	}
 
-
 // 	{ //for test
- 		SYSTEMTIME  st;
- 		GetLocalTime(&st);
-  		CString test;
-		for (int i =0;i<5;i++)
-		{
-			test.Format("testtesttest%d",i);
-			st.wMinute=0;
-			st.wHour++;
-			InsertOneRecord(0,0,st,test);
-			st.wMinute = 30;
-			updateEndTime(st,test);
-		}
+//  		SYSTEMTIME  st;
+//  		GetLocalTime(&st);
+//   		CString test;
+// 		for (int i =0;i<5;i++)
+// 		{
+// 			test.Format("testtesttest%d",i);
+// 			st.wMinute=0;
+// 			st.wHour++;
+// 			InsertOneRecord(0,0,st,test);
+// 			st.wMinute = 30;
+// 			updateEndTime(st,test);
+// 		}
 //  		InsertOneRecord(0,0,st,test);
 //  		updateEndTime(st,test);
 // // 		MONTHDAYSTATE prgDayState;

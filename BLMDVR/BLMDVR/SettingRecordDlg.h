@@ -21,7 +21,8 @@ private:
 	BOOL m_localRecodePlan[BLM_CHANNEL_MAX][7][24];
 	CButton m_checkButton[7][24];
 	int m_selectedChannel;
-
+	CStatic m_hourLabel[24];
+	CStatic m_dayLabel[7];
 public:
 	CRecordSettingDlg(CSettingDlg *parent){m_parent = parent;};
 	enum { IDD = IDD_RECORD_SETTING };
@@ -46,20 +47,12 @@ public:
 	END_MSG_MAP()
 
 
-	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-	{
-		CMessageLoop* pLoop = _Module.GetMessageLoop();
-		ATLASSERT(pLoop != NULL);
-		pLoop->RemoveMessageFilter(this);
-		pLoop->RemoveIdleHandler(this);
-		return 0;
-	}
-
+	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnConfirm(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLvnItemchangedChannelList(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 	void initPlanCheck();
 	void updatePlanCheckValue();
 	void savePlanCheckValue();
-	void clearPlanCheck();
+	void initList();
 };
