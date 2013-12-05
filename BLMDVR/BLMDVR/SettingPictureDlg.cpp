@@ -42,7 +42,10 @@ LRESULT CPictureSettingDlg::OnLvnItemchangedChannellist(int /*idCtrl*/, LPNMHDR 
 		m_channelNameEdit.SetWindowText(buff);
 
 		m_previewDlg.changeChannel(m_channelIndex[index]);
-		//StartVideoPreview(m_parent->m_channelHandle[i],m_previewDlg,&rc,FALSE,0,25);
+		if (m_parent->m_channelHandle[m_channelIndex[index]] != INVALID_HANDLE_VALUE)
+		{
+			StartVideoPreview(m_parent->m_channelHandle[m_channelIndex[index]],m_previewDlg,NULL,FALSE,0,25);
+		}
 	}	
 	return 0;
 

@@ -58,9 +58,11 @@ LRESULT CCradleSettingDlg::OnLvnItemchangedListCradle(int /*idCtrl*/, LPNMHDR pN
 	if (pNMLV->uNewState&LVIS_SELECTED) 
 	{
 		m_selectedChannel = m_channelList.GetSelectedIndex();   //获得点击的那个行
-
 		m_previewDlg.changeChannel(m_selectedChannel);
-
+		if (m_parent->m_channelHandle[m_selectedChannel] != INVALID_HANDLE_VALUE)
+		{
+			StartVideoPreview(m_parent->m_channelHandle[m_selectedChannel],m_previewDlg,NULL,FALSE,0,25);
+		}
 	}	
 	return 0;
 }

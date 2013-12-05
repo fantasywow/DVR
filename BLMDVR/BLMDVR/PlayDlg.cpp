@@ -3,6 +3,8 @@
 #include "dhplay.h"
 #include "RecordManager.h"
 #include "MainDlg.h"
+
+
 //100 zhuan 60
 inline double convert100to60(int arg){
 	int	hour = arg/10000;
@@ -10,7 +12,6 @@ inline double convert100to60(int arg){
 	int second = arg%100;
 	return hour*3600+minute*60+second;
 }
-
 
 
 LRESULT CPlayDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )

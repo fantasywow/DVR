@@ -72,7 +72,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	CenterWindow();
 
 	RegisterStreamDirectReadCallback(StreamDirectReadCallback, this);
-
+	updateSetting();
 	return TRUE;
 }
 
@@ -292,6 +292,20 @@ void CMainDlg::FocusChannel( int channelID )
 
 void CMainDlg::updateSetting()
 {
+
+	for (int i = 0;i<BLM_CHANNEL_MAX;i++)
+	{
+		if (m_channelHandle[i] != INVALID_HANDLE_VALUE)
+		{
+			if (m_settingDlg->m_encodeSetting[i].audio)
+			{
+				SetStreamType(m_channelHandle[i],STREAM_TYPE_AVSYNC);
+			}else{
+				SetStreamType(m_channelHandle[i],STREAM_TYPE_VIDEO);
+			}
+		}
+	}
+
 	for (int i = 0;i<BLM_CHANNEL_MAX;i++)
 	{
 		if (m_channelHandle[i] != INVALID_HANDLE_VALUE)
@@ -300,22 +314,6 @@ void CMainDlg::updateSetting()
 			//系统默认：16
 			int quant[5]={12,16,20,24,30};
 			SetDefaultQuant(m_channelHandle[i],quant[m_settingDlg->m_encodeSetting[i].quality],NULL,NULL);
-			/*typedef enum 
-			{
-				ENC_QCIF_FORMAT = 1,
-				ENC_CIF_FORMAT = 2,
-				ENC_MCIF_FORMAT = 3,
-				ENC_HCIF_FORMAT = 4,
-				ENC_2CIF_FORMAT = 5,
-				ENC_HD1_FORMAT = 6,
-				ENC_4CIF_FORMAT = 7,
-			}PictureFormat_t;
-			//PictureForamt_t
-			//m_format.AddString("CIF");
-			//m_format.AddString("QCIF");
-			//m_format.AddString("2CIF");
-			//m_format.AddString("D1");
-			*/
 			int format[4] = {1,2,5,6};
 			SetEncoderPictureFormat(m_channelHandle[i],(PictureFormat_t)format[m_settingDlg->m_encodeSetting[i].format]);
 			//N 制：1,2,3,4,5,6,7,10,15,30；
@@ -461,6 +459,11 @@ void CMainDlg::SaveStreamData(int iChannel, void * pData, int iNum, int iFrameTy
 	int iCH = iChannel;
 
 	if (iChannel < 0 || iChannel >= BLM_CHANNEL_MAX)
+	{
+		return;
+	}
+
+	if (m_settingDlg->m_encodeSetting[iChannel].audio==0&&(iFrameType==PktAudioFrames||iFrameType==PktSubAudioFrames))
 	{
 		return;
 	}
@@ -630,6 +633,15 @@ LRESULT CMainDlg::OnBnClickedButtonRight(WORD /*wNotifyCode*/, WORD /*wID*/, HWN
 void CMainDlg::LoadSetting()
 {
 	GetPrivateProfileString("StorePath","Path","C:\\",m_settingDlg->m_capturePath.GetBuffer(30),30,SETTING_FILE.c_str());
+	
+	for(int i = 0;i<BLM_CHANNEL_MAX;i++){
+		CString label;
+		label.Format("OSD%d",i);
+		m_settingDlg->m_osdName[i] = GetPrivateProfileInt(label,"OsdName",1,SETTING_FILE.c_str());
+		m_settingDlg->m_osdTime[i] = GetPrivateProfileInt(label,"OsdTime",1,SETTING_FILE.c_str());
+	}
+
+	
 	for(int i = 0;i<BLM_CHANNEL_MAX;i++){
 		CString temp;
 		temp.Format("EncodeSetting%d",i);
@@ -667,6 +679,18 @@ void CMainDlg::LoadSetting()
 void CMainDlg::SaveSetting()
 {
 	WritePrivateProfileString("StorePath","Path",m_settingDlg->m_capturePath.GetBuffer(0),SETTING_FILE.c_str());
+
+
+	for(int i = 0;i<BLM_CHANNEL_MAX;i++){
+		CString label;
+		label.Format("OSD%d",i);
+		CString value;
+		value.Format("%d",m_settingDlg->m_osdName[i]);
+		WritePrivateProfileString(label,"OsdName",value,SETTING_FILE.c_str());
+		value.Format("%d",m_settingDlg->m_osdTime[i]);
+		WritePrivateProfileString(label,"OsdTime",value,SETTING_FILE.c_str());
+	}
+
 
 	for(int i = 0;i<BLM_CHANNEL_MAX;i++){
 		CString label;
